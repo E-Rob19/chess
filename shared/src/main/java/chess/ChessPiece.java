@@ -55,12 +55,13 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return bishopMoves(board, myPosition);
+        calculateMoves calulator = new calculateMoves();
+        return calulator.calulate(this.type, board, myPosition);
     }
 
-    private ArrayList<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
-        ArrayList<ChessMove> test = new ArrayList<ChessMove>();
-        test.add(new ChessMove(myPosition, new ChessPosition(1,1), null));
-        return test;
-    }
+    //private ArrayList<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
+    //    ArrayList<ChessMove> test = new ArrayList<ChessMove>();
+    //    test.add(new ChessMove(myPosition, new ChessPosition(1,1), null));
+    //    return test;
+    //}
 }

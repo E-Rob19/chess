@@ -37,13 +37,14 @@ public class calculateMoves {
 
     private ArrayList<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
-        //ChessPosition possibleSpace = ChessPosition(0,0);
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
+        ChessMove mov;
         while (row < 8 && col < 8) {
             row++; col++;
             ChessPosition pos = new ChessPosition(row, col);
-            movs.add(checkSpace(board, myPosition, pos));
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
             if (board.getPiece(pos) != null){ break; }
         }
         row = myPosition.getRow();
@@ -51,7 +52,8 @@ public class calculateMoves {
         while (row > 1 && col > 1) {
             row--; col--;
             ChessPosition pos = new ChessPosition(row, col);
-            movs.add(checkSpace(board, myPosition, pos));
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
             if (board.getPiece(pos) != null){ break; }
         }
         row = myPosition.getRow();
@@ -59,7 +61,8 @@ public class calculateMoves {
         while (row > 1 && col < 8) {
             row--; col++;
             ChessPosition pos = new ChessPosition(row, col);
-            movs.add(checkSpace(board, myPosition, pos));
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
             if (board.getPiece(pos) != null){ break; }
         }
         row = myPosition.getRow();
@@ -67,7 +70,8 @@ public class calculateMoves {
         while (row < 8 && col > 1) {
             row++; col--;
             ChessPosition pos = new ChessPosition(row, col);
-            movs.add(checkSpace(board, myPosition, pos));
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
             if (board.getPiece(pos) != null){ break; }
         }
         return movs;
@@ -93,13 +97,50 @@ public class calculateMoves {
 
     private ArrayList<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
-
+        movs.addAll(bishopMoves(board, myPosition));
+        movs.addAll(rookMoves(board, myPosition));
         return movs;
     }
 
     private ArrayList<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
-
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        ChessMove mov;
+        while (row < 8) {
+            row++;
+            ChessPosition pos = new ChessPosition(row, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
+            if (board.getPiece(pos) != null){ break; }
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (row > 1) {
+            row--;
+            ChessPosition pos = new ChessPosition(row, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
+            if (board.getPiece(pos) != null){ break; }
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (col < 8) {
+            col++;
+            ChessPosition pos = new ChessPosition(row, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
+            if (board.getPiece(pos) != null){ break; }
+        }
+        row = myPosition.getRow();
+        col = myPosition.getColumn();
+        while (col > 1) {
+            col--;
+            ChessPosition pos = new ChessPosition(row, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov!= null){movs.add(mov);}
+            if (board.getPiece(pos) != null){ break; }
+        }
         return movs;
     }
 }

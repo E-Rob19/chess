@@ -79,7 +79,104 @@ public class calculateMoves {
 
     private ArrayList<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
-
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        ChessMove mov;
+        ChessPosition pos;
+        if (row>1 && row<8 && col>1 && col<8) {
+            for(int i = -1; i < 2; i++) {
+                pos = new ChessPosition(row+i, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) {
+                    movs.add(mov);
+                }
+            }
+            for(int i = -1; i < 2; i++) {
+                pos = new ChessPosition(row+i, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) {
+                    movs.add(mov);
+                }
+            }
+            pos = new ChessPosition(row+1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+            pos = new ChessPosition(row-1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+        }
+        if(row == 1){
+            pos = new ChessPosition(row+1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+            if(col != 8){
+                pos = new ChessPosition(row+1, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+            if (col != 1) {
+                pos = new ChessPosition(row+1, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+        }
+        if(row == 8){
+            pos = new ChessPosition(row-1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+            if(col != 8){
+                pos = new ChessPosition(row-1, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+            if (col != 1) {
+                pos = new ChessPosition(row-1, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+        }
+        if((col == 1 || col == 8) && row != 1 && row != 8){
+            pos = new ChessPosition(row-1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+            pos = new ChessPosition(row+1, col);
+            mov = checkSpace(board, myPosition, pos);
+            if (mov != null) { movs.add(mov); }
+            if(col == 8){
+                pos = new ChessPosition(row-1, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row+1, col-1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+            if (col == 1) {
+                pos = new ChessPosition(row-1, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+                pos = new ChessPosition(row+1, col+1);
+                mov = checkSpace(board, myPosition, pos);
+                if (mov != null) { movs.add(mov); }
+            }
+        }
         return movs;
     }
 

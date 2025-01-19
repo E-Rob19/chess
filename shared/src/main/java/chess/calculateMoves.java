@@ -182,7 +182,53 @@ public class calculateMoves {
 
     private ArrayList<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition){
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
-
+        int row = myPosition.getRow();
+        int row1 = myPosition.getRow();
+        int col = myPosition.getColumn();
+        int col1 = myPosition.getColumn();
+        ChessMove mov;
+        row -= 2; row1 += 2; col -= 1; col1 += 1;
+        if(row>0) {
+            if (col>0) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col));
+                if (mov != null) {movs.add(mov);}
+            }
+            if (col1<9) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col1));
+                if (mov != null) {movs.add(mov);}
+            }
+        }
+        if(row1<9) {
+            if (col>0) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row1, col));
+                if (mov != null) {movs.add(mov);}
+            }
+            if (col1<8) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row1, col1));
+                if (mov != null) {movs.add(mov);}
+            }
+        }
+        row += 1; row1 -= 1; col -= 1; col1 += 1;
+        if(row>0) {
+            if (col>0) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col));
+                if (mov != null) {movs.add(mov);}
+            }
+            if (col1<9) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col1));
+                if (mov != null) {movs.add(mov);}
+            }
+        }
+        if(row1<9) {
+            if (col>0) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row1, col));
+                if (mov != null) {movs.add(mov);}
+            }
+            if (col1<9) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row1, col1));
+                if (mov != null) {movs.add(mov);}
+            }
+        }
         return movs;
     }
 
@@ -241,10 +287,3 @@ public class calculateMoves {
         return movs;
     }
 }
-
-//            if (board.getPiece(pos) != null){
-//                if(board.getPiece(pos).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
-//                    movs.add(new ChessMove(myPosition, pos, null));
-//                    break;
-//                } else { break; }
-//            } else { movs.add(new ChessMove(myPosition, pos, null)); }

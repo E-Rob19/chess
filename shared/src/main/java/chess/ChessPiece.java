@@ -13,6 +13,7 @@ public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
+    private boolean initialMove = true;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -45,6 +46,14 @@ public class ChessPiece {
     public PieceType getPieceType() {
         return type;
         //throw new RuntimeException("Not implemented");
+    }
+
+    public boolean getinitialMove() {
+        return initialMove;
+    }
+
+    public void setinitialMove() {
+        initialMove = false;
     }
 
     /**

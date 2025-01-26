@@ -53,7 +53,7 @@ public class calculateMoves {
     private ChessMove checkSpacePawn(ChessBoard board, ChessPosition myPosition, ChessPosition pos, ChessPiece.PieceType promotion){
         if (board.getPiece(pos) != null){
             if(board.getPiece(pos).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
-                return new ChessMove(myPosition, pos, null);
+                return new ChessMove(myPosition, pos, promotion);
             } else { return null; }
         }
         return null;
@@ -263,30 +263,45 @@ public class calculateMoves {
         ChessMove mov;
         ChessPosition pos = new ChessPosition(row, col);
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
-            if(row < 8) {
-                row++;
-                pos = new ChessPosition(row, col);
-                if (row < 8) {
-                    mov = checkSpace(board, myPosition, pos);
-                    if (mov != null) { movs.add(mov); }
+            if(row < 7) {
+                pos = new ChessPosition(row+1, col);
+                if (board.getPiece(pos) == null){
+                    movs.add(new ChessMove(myPosition, pos, null));
                 }
-                if(row == 8){
-                    mov = checkSpace(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
-                    if (mov != null) { movs.add(mov); }
-                    mov = checkSpace(board, myPosition, pos, ChessPiece.PieceType.BISHOP);
-                    if (mov != null) { movs.add(mov); }
-                    mov = checkSpace(board, myPosition, pos, ChessPiece.PieceType.KNIGHT);
-                    if (mov != null) { movs.add(mov); }
-                    mov = checkSpace(board, myPosition, pos, ChessPiece.PieceType.ROOK);
-                    if (mov != null) { movs.add(mov); }
+                if (col < 7) {
+                    pos = new ChessPosition(row + 1, col + 1);
+                    mov = checkSpacePawn(board, myPosition, pos);
+                    if (mov != null) {
+                        movs.add(mov);
+                    }
                 }
-                col++;
-                pos = new ChessPosition(row, col);
-                if (row < 8) {
-                    mov = checkSpace(board, myPosition, pos);
-                    if (mov != null) { movs.add(mov); }
+                if (col > 1) {
+                    pos = new ChessPosition(row + 1, col - 1);
+                    mov = checkSpacePawn(board, myPosition, pos);
+                    if (mov != null) {
+                        movs.add(mov);
+                    }
                 }
-                if(row == 8){
+                if (board.getPiece(myPosition).getinitialMove()){
+                    board.getPiece(myPosition).setinitialMove();
+                    if(myPosition.getRow() == 2 && board.getPiece(new ChessPosition(row+1, col))==null) {
+                        pos = new ChessPosition(row + 2, col);
+                        if (board.getPiece(pos) == null){
+                            movs.add(new ChessMove(myPosition, pos, null));
+                        }
+                    }
+                }
+            }
+            if (row == 7){
+                pos = new ChessPosition(row+1, col);
+                if (board.getPiece(pos) == null){
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.QUEEN));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.BISHOP));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.KNIGHT));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.ROOK));
+                }
+                if (col < 7) {
+                    pos = new ChessPosition(row + 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
                     if (mov != null) { movs.add(mov); }
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.BISHOP);
@@ -296,13 +311,59 @@ public class calculateMoves {
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.ROOK);
                     if (mov != null) { movs.add(mov); }
                 }
-                col -= 2;
-                pos = new ChessPosition(row, col);
-                if (row < 8) {
-                    mov = checkSpace(board, myPosition, pos);
+                if (col > 1) {
+                    pos = new ChessPosition(row + 1, col - 1);
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
                     if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.BISHOP);
+                    if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.KNIGHT);
+                    if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.ROOK);
+                    if (mov != null) { movs.add(mov);}
                 }
-                if(row == 8){
+            }
+        }
+        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+            if(row > 2) {
+                pos = new ChessPosition(row-1, col);
+                if (board.getPiece(pos) == null){
+                    movs.add(new ChessMove(myPosition, pos, null));
+                }
+                if (col < 7) {
+                    pos = new ChessPosition(row - 1, col + 1);
+                    mov = checkSpacePawn(board, myPosition, pos);
+                    if (mov != null) {
+                        movs.add(mov);
+                    }
+                }
+                if (col > 1) {
+                    pos = new ChessPosition(row - 1, col - 1);
+                    mov = checkSpacePawn(board, myPosition, pos);
+                    if (mov != null) {
+                        movs.add(mov);
+                    }
+                }
+                if (board.getPiece(myPosition).getinitialMove()){
+                    board.getPiece(myPosition).setinitialMove();
+                    if(row == 7 && board.getPiece(new ChessPosition(row-1, col))==null) {
+                        pos = new ChessPosition(row - 2, col);
+                        if (board.getPiece(pos) == null){
+                            movs.add(new ChessMove(myPosition, pos, null));
+                        }
+                    }
+                }
+            }
+            if (row == 2){
+                pos = new ChessPosition(row-1, col);
+                if (board.getPiece(pos) == null){
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.QUEEN));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.BISHOP));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.KNIGHT));
+                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.ROOK));
+                }
+                if (col < 7) {
+                    pos = new ChessPosition(row - 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
                     if (mov != null) { movs.add(mov); }
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.BISHOP);
@@ -312,22 +373,17 @@ public class calculateMoves {
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.ROOK);
                     if (mov != null) { movs.add(mov); }
                 }
-            } //else if (row == 7) {
-//                row++;
-//                pos = new ChessPosition(row, col);
-//                if (board.getPiece(pos) != null){
-//                    if(board.getPiece(pos).getTeamColor() != board.getPiece(myPosition).getTeamColor()){
-//                        mov = new ChessMove(myPosition, pos, null);
-//                    }
-//                } else { return new ChessMove(myPosition, pos, null); }
-//                if (mov != null) { movs.add(mov); }
-//            }
-            if(board.getPiece(myPosition).getinitialMove() && row-1 == 2){
-                col = myPosition.getColumn();
-                row++;
-                pos = new ChessPosition(row, col);
-                mov = checkSpace(board, myPosition, pos);
-                if (mov != null) { movs.add(mov); }
+                if (col > 1) {
+                    pos = new ChessPosition(row - 1, col - 1);
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
+                    if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.BISHOP);
+                    if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.KNIGHT);
+                    if (mov != null) { movs.add(mov); }
+                    mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.ROOK);
+                    if (mov != null) { movs.add(mov);}
+                }
             }
         }
         return movs;

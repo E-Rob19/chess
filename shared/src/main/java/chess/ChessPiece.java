@@ -1,7 +1,7 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -18,6 +18,27 @@ public class ChessPiece {
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return initialMove == that.initialMove && pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type, initialMove);
     }
 
     /**
@@ -64,13 +85,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        calculateMoves calulator = new calculateMoves();
-        return calulator.calulate(this.type, board, myPosition);
+        calculateMoves calculator = new calculateMoves();
+        return calculator.calulate(this.type, board, myPosition);
     }
 
-    //private ArrayList<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition){
-    //    ArrayList<ChessMove> test = new ArrayList<ChessMove>();
-    //    test.add(new ChessMove(myPosition, new ChessPosition(1,1), null));
-    //    return test;
-    //}
 }

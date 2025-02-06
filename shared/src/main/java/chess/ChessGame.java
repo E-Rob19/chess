@@ -50,8 +50,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        if(board.getPiece(startPosition) != null) {
-            Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        ChessPiece myPiece = board.getPiece(startPosition);
+        if(myPiece != null) {
+            Collection<ChessMove> moves = myPiece.pieceMoves(board, startPosition);
         } else {
             return null;
         }

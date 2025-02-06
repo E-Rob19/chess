@@ -89,4 +89,7 @@ public class ChessPiece {
         return calculator.calulate(this.type, board, myPosition);
     }
 
+    public ChessPiece copy(){
+        return new ChessPiece(pieceColor, type);
+    }
 }

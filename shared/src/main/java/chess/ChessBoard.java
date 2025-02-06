@@ -95,4 +95,17 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
+    public ChessBoard copy(){
+        ChessBoard newB = new ChessBoard();
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(squares[i][j] != null) {
+                    newB.squares[i][j] = squares[i][j].copy();
+                }
+            }
+        }
+        return newB;
+    }
+
 }

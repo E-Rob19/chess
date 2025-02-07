@@ -52,7 +52,7 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece myPiece = board.getPiece(startPosition);
         ChessBoard testBoard = board.copy();
-        ArrayList<ChessMove> invalidMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> invalidMoves = new ArrayList<>();
         if(myPiece != null) {
             Collection<ChessMove> moves = myPiece.pieceMoves(board, startPosition);
             for(ChessMove move : moves){
@@ -83,7 +83,33 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException("no chess piece to move");
+        }
+        ChessPiece piece = board.getPiece(move.getStartPosition()).copy();
+        if(piece.getTeamColor() != getTeamTurn()){
+            throw new InvalidMoveException("wrong team color");
+        }
+        Collection<ChessMove> moves = validMoves(move.getStartPosition());
+        if(!moves.contains(move)){
+            throw new InvalidMoveException("not a valid move for that piece");
+        }
+
+        board.addPiece(move.getStartPosition(), null);
+        if(board.getPiece(move.getEndPosition()) != null) {
+            board.addPiece(move.getEndPosition(), null);
+        }
+        if(move.getPromotionPiece() == null) {
+            board.addPiece(move.getEndPosition(), piece);
+        } else {
+            board.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+        }
+        if(piece.getTeamColor() == TeamColor.WHITE) {
+            setTeamTurn(TeamColor.BLACK);
+        } else {
+            setTeamTurn(TeamColor.WHITE);
+        }
+        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -93,7 +119,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPiece myPiece = null;
+        ChessPiece myPiece;
         ChessPosition kingPos = null;
         ChessPosition pos;
         for(int i  = 1; i < 9; i++){

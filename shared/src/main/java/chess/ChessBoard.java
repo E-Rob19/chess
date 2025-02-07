@@ -11,8 +11,9 @@ import java.util.Objects;
  */
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
+
     public ChessBoard() {
-        
+        resetBoard();
     }
 
     /**
@@ -68,6 +69,8 @@ public class ChessBoard {
         //throw new RuntimeException("Not implemented");
     }
 
+
+
     @Override
     public String toString() {
         StringBuilder ans = new StringBuilder();
@@ -102,6 +105,8 @@ public class ChessBoard {
             for(int j = 0; j < 8; j++){
                 if(squares[i][j] != null) {
                     newB.squares[i][j] = squares[i][j].copy();
+                } else {
+                    newB.squares[i][j] = null;
                 }
             }
         }

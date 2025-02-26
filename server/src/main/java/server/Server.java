@@ -11,6 +11,8 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
 
+        Spark.post("/user", this::register);
+
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
@@ -22,4 +24,9 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    private Object register(Request req, Response res) {
+
+    }
+
 }

@@ -3,17 +3,16 @@ package dataaccess;
 import model.UserData;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class MemoryUserDAO implements UserDataAccess {
 
-    private ArrayList<UserData> users = new ArrayList<>();
+    private static final ArrayList<UserData> users = new ArrayList<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).username() == username){
-                return users.get(i);
+        for (UserData user : users) {
+            if (user.username().equals(username)) {
+                return user;
             }
         }
         return null;

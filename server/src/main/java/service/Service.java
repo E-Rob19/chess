@@ -16,4 +16,7 @@ public class Service {
     }
     //public LoginResult login(LoginRequest loginRequest) {}
     //public void logout(LogoutRequest logoutRequest) {}
+    public void clear(){
+
+    }
 }

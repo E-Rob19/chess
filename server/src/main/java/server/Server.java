@@ -17,6 +17,7 @@ public class Server {
         // Register your endpoints and handle exceptions here.
 
         Spark.post("/user", this::register);
+        Spark.post("/db", this::clear);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -47,6 +48,12 @@ public class Server {
         } else {
             return serializer.toJson(rRes);
         }
+    }
+
+    private Object clear(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
+
     }
 
 }

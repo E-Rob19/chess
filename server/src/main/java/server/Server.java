@@ -2,10 +2,10 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import service.RegisterRequest;
-import service.RegisterResult;
+import service.*;
 import service.Service;
 import spark.*;
+import model.ErrorMessage;
 
 public class Server {
 
@@ -36,8 +36,17 @@ public class Server {
         //var  = new RegisterRequest();
         //var json =
         RegisterRequest rReq = serializer.fromJson(req.body(), RegisterRequest.class);
+        if(rReq.username() == null || rReq.password() == null || rReq.email()==null){
+            res.status(400);
+            return serializer.toJson(new ErrorMessage("Error: bad request"));
+        }
         RegisterResult rRes = service.register(rReq);
-        return serializer.toJson(rReq);
+        if(rRes == null){
+            res.status(403);
+            return serializer.toJson(new ErrorMessage("Error: already taken"));
+        } else {
+            return serializer.toJson(rRes);
+        }
     }
 
 }

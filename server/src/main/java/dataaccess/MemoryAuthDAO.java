@@ -20,6 +20,11 @@ public class MemoryAuthDAO implements AuthDataAccess{
         return null;
     }
 
+    @Override
+    public ArrayList<AuthData> listAuths() throws DataAccessException{
+        return auths;
+    }
+
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }

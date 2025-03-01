@@ -1,5 +1,6 @@
 package dataaccess;
 
+import model.GameData;
 import model.UserData;
 
 import java.util.ArrayList;
@@ -16,6 +17,11 @@ public class MemoryUserDAO implements UserDataAccess {
             }
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<UserData> listUsers() throws DataAccessException {
+        return users;
     }
 
     @Override

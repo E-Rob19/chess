@@ -20,6 +20,15 @@ public class MemoryAuthDAO implements AuthDataAccess{
         return null;
     }
 
+    public AuthData getAuthFromToken(String authToken) throws DataAccessException {
+        for (AuthData auth : auths) {
+            if (auth.authToken().equals(authToken)) {
+                return auth;
+            }
+        }
+        return null;
+    }
+
     @Override
     public ArrayList<AuthData> listAuths() throws DataAccessException{
         return auths;

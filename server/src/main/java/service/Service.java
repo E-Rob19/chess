@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import model.AuthData;
 import model.UserData;
 
 public class Service {
@@ -29,7 +30,14 @@ public class Service {
         return null;
     }
 
-    //public void logout(LogoutRequest logoutRequest) {}
+    public String logout(LogoutRequest logoutRequest) throws DataAccessException {
+        AuthData auth = authDatabase.getAuthFromToken(logoutRequest.authToken());
+        if (auth == null){
+            return "no";
+        }
+        authDatabase.deleteAuth(auth);
+        return "Yes";
+    }
 
     public void clear() throws DataAccessException {
         userDatabase.clear();

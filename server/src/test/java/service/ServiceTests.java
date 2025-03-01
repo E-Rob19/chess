@@ -10,9 +10,9 @@ class ServiceTests {
     @Test
     void registerPositive() throws DataAccessException {
         Service service = new Service();
-        RegisterRequest given = new RegisterRequest("emma", "leslie", "email");
+        RegisterRequest req = new RegisterRequest("emma", "leslie", "email");
 
-        RegisterResult actual = service.register(given);
+        RegisterResult actual = service.register(req);
 
         assertNotNull(actual);
     }
@@ -20,9 +20,9 @@ class ServiceTests {
     @Test
     void registerNegative() throws DataAccessException {
         Service service = new Service();
-        RegisterRequest given = new RegisterRequest("emma", "leslie", "email");
-        service.register(given);
-        RegisterResult actual = service.register(given);
+        RegisterRequest req = new RegisterRequest("emma", "leslie", "email");
+        service.register(req);
+        RegisterResult actual = service.register(req);
 
         assertNull(actual);
     }

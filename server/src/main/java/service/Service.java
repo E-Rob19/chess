@@ -6,6 +6,7 @@ import model.UserData;
 public class Service {
     UserDataAccess userDatabase = new MemoryUserDAO();
     AuthDataAccess authDatabase = new MemoryAuthDAO();
+    GameDataAccess gameDatabase = new MemoryGameDAO();
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         if(userDatabase.getUser(registerRequest.username())==null){
             userDatabase.createUser(new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email()));
@@ -16,7 +17,9 @@ public class Service {
     }
     //public LoginResult login(LoginRequest loginRequest) {}
     //public void logout(LogoutRequest logoutRequest) {}
-    public void clear(){
-
+    public void clear() throws DataAccessException {
+        userDatabase.clear();
+        authDatabase.clear();
+        gameDatabase.clear();
     }
 }

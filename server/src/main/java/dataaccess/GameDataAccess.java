@@ -6,13 +6,13 @@ import model.UserData;
 import java.util.ArrayList;
 
 public interface GameDataAccess {
-    GameData getGame(String gameID) throws DataAccessException;
+    GameData getGame(int gameID) throws DataAccessException;
 
     void createGame(String gameName) throws DataAccessException;
 
     ArrayList<GameData> listGames() throws DataAccessException;
 
-    void addPlayer(String gameID, String username, String playerColor);
+    void addPlayer(int gameID, String username, String playerColor);
 
     void clear() throws DataAccessException;
 

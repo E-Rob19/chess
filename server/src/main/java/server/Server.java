@@ -18,6 +18,11 @@ public class Server {
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);
+        Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -55,6 +60,52 @@ public class Server {
         var serializer = new Gson();
 
         service.clear();
+
+        return serializer.toJson(new Object());
+    }
+
+    private Object login(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
+
+        LoginRequest rReq = serializer.fromJson(req.body(), LoginRequest.class);
+        if(rReq.username() == null || rReq.password() == null){
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        }
+        RegisterResult rRes = service.login(rReq);
+        if(rRes == null){
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        }
+
+        return serializer.toJson(rRes);
+    }
+
+    private Object logout(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
+
+        return serializer.toJson(new Object());
+    }
+
+    private Object listGames(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
+
+        return serializer.toJson(new Object());
+    }
+
+    private Object createGame(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
+
+        return serializer.toJson(new Object());
+    }
+
+    private Object joinGame(Request req, Response res) throws DataAccessException{
+        Service service = new Service();
+        var serializer = new Gson();
 
         return serializer.toJson(new Object());
     }

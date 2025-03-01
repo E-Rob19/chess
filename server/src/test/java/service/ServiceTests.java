@@ -64,14 +64,23 @@ class ServiceTests {
     @Test
     void loginPositive() throws DataAccessException {
         Service service = new Service();
+        RegisterRequest req = new RegisterRequest("emma", "leslie", "email");
+        service.register(req);
+        LoginRequest lReq = new LoginRequest("emma", "leslie");
 
+        RegisterResult actual = service.login(lReq);
 
+        assertNotNull(actual);
     }
 
     @Test
     void loginNegative() throws DataAccessException {
         Service service = new Service();
+        LoginRequest req = new LoginRequest("emma", "leslie");
 
+        RegisterResult actual = service.login(req);
+
+        assertNull(actual);
     }
 
     //logout

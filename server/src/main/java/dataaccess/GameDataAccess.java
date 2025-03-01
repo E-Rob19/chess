@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface GameDataAccess {
     GameData getGame(String gameID) throws DataAccessException;
 
-    void createGame(GameData game) throws DataAccessException;
+    void createGame(String gameName) throws DataAccessException;
 
     ArrayList<GameData> listGames() throws DataAccessException;
 

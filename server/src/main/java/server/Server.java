@@ -54,6 +54,7 @@ public class Server {
         Service service = new Service();
         var serializer = new Gson();
 
+        return null;
     }
 
 }

@@ -40,13 +40,19 @@ public class MemoryAuthDAO implements AuthDataAccess{
 
     @Override
     public void createAuth(String username) throws DataAccessException {
-        String authToken = generateToken();
-        auths.add(new AuthData(authToken, username));
+        String authToken = UUID.randomUUID().toString(); //generateToken();
+        auths.addFirst(new AuthData(authToken, username));
+
     }
 
     @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
         auths.remove(auth);
+        //for (AuthData a : auths) {
+          //  if (a.authToken().equals(auth.authToken())) {
+            //    auths.remove(a);
+            //}
+        //}
     }
 
     @Override

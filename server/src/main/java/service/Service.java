@@ -25,6 +25,7 @@ public class Service {
             return null;
         }
         if(user.password().equals(loginRequest.password())){
+            //authDatabase.deleteAuth(authDatabase.getAuth(user.username()));
             authDatabase.createAuth(loginRequest.username());
             return new RegisterResult(loginRequest.username(), authDatabase.getAuth(loginRequest.username()).authToken());
         }

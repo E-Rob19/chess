@@ -115,6 +115,10 @@ public class Server {
         }
 
         ListResponse lRes = service.listGames(rReq);
+        if(lRes == null){
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        }
 
         return serializer.toJson(lRes);
     }
@@ -123,7 +127,21 @@ public class Server {
         Service service = new Service();
         var serializer = new Gson();
 
-        return serializer.toJson(new Object());
+        StringRequest rReq = serializer.fromJson(req.body(), StringRequest.class);
+        String name = rReq.gameName();
+        String authToken = req.headers("Authorization");
+        CreateGameRequest cReq = new CreateGameRequest(authToken, name);
+        if(cReq.gameName() == null){
+            name = "";
+            //res.status(400);
+            //return serializer.toJson(new ErrorMessage("Error: bad request"));
+        }
+        CreateGameResponse cRes = service.createGame(cReq);
+        if(cRes == null){
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        }
+        return serializer.toJson(cRes);
     }
 
     private Object joinGame(Request req, Response res) throws DataAccessException{

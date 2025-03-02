@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MemoryGameDAO implements GameDataAccess{
 
     private static final ArrayList<GameData> games = new ArrayList<>();
-    int gameNum = 0;
+    int gameNum = 1;
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
@@ -23,8 +23,10 @@ public class MemoryGameDAO implements GameDataAccess{
     }
 
     @Override
-    public void createGame(String gameName) throws DataAccessException {
+    public int createGame(String gameName) throws DataAccessException {
         games.add(new GameData(gameNum, null, null, gameName, new ChessGame()));
+        gameNum++;
+        return gameNum-1;
     }
 
     @Override

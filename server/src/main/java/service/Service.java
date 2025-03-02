@@ -48,6 +48,17 @@ public class Service {
         return new ListResponse(gameDatabase.listGamesForResponse());
     }
 
+    public CreateGameResponse createGame(CreateGameRequest createGameRequest) throws DataAccessException {
+        AuthData auth = authDatabase.getAuthFromToken(createGameRequest.authToken());
+        if (auth == null){
+            return null;
+        }
+
+        int gameID = gameDatabase.createGame(createGameRequest.gameName());
+
+        return new CreateGameResponse(gameID);
+    }
+
     public void clear() throws DataAccessException {
         userDatabase.clear();
         authDatabase.clear();

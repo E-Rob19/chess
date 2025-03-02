@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 
 public class Service {
@@ -57,6 +58,35 @@ public class Service {
         int gameID = gameDatabase.createGame(createGameRequest.gameName());
 
         return new CreateGameResponse(gameID);
+    }
+
+    public String joinGame(JoinRequest joinRequest) throws DataAccessException {
+        AuthData auth = authDatabase.getAuthFromToken(joinRequest.authToken());
+        if (auth == null){
+            return "no auth";
+        }
+        GameData game = gameDatabase.getGame(joinRequest.gameID());
+        if (game == null){
+            return "no game";
+        }
+        if(joinRequest.playerColor().equals("WHITE")){
+            if(game.whiteUsername() == null || game.whiteUsername().equals(auth.username())){
+                gameDatabase.addPlayer(game.gameID(), auth.username(), joinRequest.playerColor());
+            } else {
+                return "taken";
+            }
+        } else if (joinRequest.playerColor().equals("BLACK")) {
+            if(game.blackUsername() == null || game.blackUsername().equals(auth.username())){
+                gameDatabase.addPlayer(game.gameID(), auth.username(), joinRequest.playerColor());
+            } else {
+                return "taken";
+            }
+        } else {
+            return "bad color";
+        }
+
+
+        return "Yes";
     }
 
     public void clear() throws DataAccessException {

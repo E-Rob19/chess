@@ -132,9 +132,8 @@ public class Server {
         String authToken = req.headers("Authorization");
         CreateGameRequest cReq = new CreateGameRequest(authToken, name);
         if(cReq.gameName() == null){
-            name = "";
-            //res.status(400);
-            //return serializer.toJson(new ErrorMessage("Error: bad request"));
+            res.status(400);
+            return serializer.toJson(new ErrorMessage("Error: bad request"));
         }
         CreateGameResponse cRes = service.createGame(cReq);
         if(cRes == null){
@@ -148,7 +147,28 @@ public class Server {
         Service service = new Service();
         var serializer = new Gson();
 
-        return serializer.toJson(new Object());
+        StringIDRequest rReq = serializer.fromJson(req.body(), StringIDRequest.class);
+        String authToken = req.headers("Authorization");
+        JoinRequest jReq = new JoinRequest(rReq.playerColor(), rReq.gameID(), authToken);
+        if(jReq.playerColor() == null || jReq.gameID() == null){
+            res.status(400);
+            return serializer.toJson(new ErrorMessage("Error: bad request"));
+        }
+
+        String check = service.joinGame(jReq);
+
+        if(check.equals("no auth")) {
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        } else if (check.equals("no game") || check.equals("bad color")) {
+            res.status(400);
+            return serializer.toJson(new ErrorMessage("Error: bad request"));
+        } else if (check.equals("taken")) {
+            res.status(403);
+            return serializer.toJson(new ErrorMessage("Error: already taken"));
+        } else {
+            return serializer.toJson(new Object());
+        }
     }
 
 }

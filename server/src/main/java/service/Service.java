@@ -39,6 +39,15 @@ public class Service {
         return "Yes";
     }
 
+    public ListResponse listGames(LogoutRequest logoutRequest) throws DataAccessException {
+        AuthData auth = authDatabase.getAuthFromToken(logoutRequest.authToken());
+        if (auth == null){
+            return null;
+        }
+
+        return new ListResponse(gameDatabase.listGamesForResponse());
+    }
+
     public void clear() throws DataAccessException {
         userDatabase.clear();
         authDatabase.clear();

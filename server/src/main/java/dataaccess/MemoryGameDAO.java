@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import model.GameData;
 import model.UserData;
+import service.GameDataShort;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,16 @@ public class MemoryGameDAO implements GameDataAccess{
     }
 
     @Override
-    public ArrayList<GameData> listGames() throws DataAccessException {
+    public ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException {
+        ArrayList<GameDataShort> lis = new ArrayList<>();
+        for(GameData game : games){
+          lis.add(new GameDataShort(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
+        }
+        return lis;
+    }
+
+    @Override
+    public ArrayList<GameData> listGames() throws DataAccessException{
         return games;
     }
 

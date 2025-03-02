@@ -107,7 +107,16 @@ public class Server {
         Service service = new Service();
         var serializer = new Gson();
 
-        return serializer.toJson(new Object());
+        String authToken = req.headers("Authorization");
+        LogoutRequest rReq = new LogoutRequest(authToken);
+        if(rReq.authToken() == null){
+            res.status(401);
+            return serializer.toJson(new ErrorMessage("Error: unauthorized"));
+        }
+
+        ListResponse lRes = service.listGames(rReq);
+
+        return serializer.toJson(lRes);
     }
 
     private Object createGame(Request req, Response res) throws DataAccessException{

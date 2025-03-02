@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.GameData;
 import model.UserData;
+import service.GameDataShort;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,8 @@ public interface GameDataAccess {
     void createGame(String gameName) throws DataAccessException;
 
     ArrayList<GameData> listGames() throws DataAccessException;
+
+    ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException;
 
     void addPlayer(int gameID, String username, String playerColor);
 

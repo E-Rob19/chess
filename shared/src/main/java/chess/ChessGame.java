@@ -122,6 +122,7 @@ public class ChessGame {
         ChessPiece myPiece;
         ChessPosition kingPos = null;
         ChessPosition pos;
+        boolean check = false;
         for(int i  = 1; i < 9; i++){
             for(int j  = 1; j < 9; j++){
                 pos = new ChessPosition(i,j);
@@ -142,14 +143,12 @@ public class ChessGame {
                     moves = myPiece.pieceMoves(board, pos);
                     for (ChessMove move : moves) {
                         ChessPosition checkPos = move.getEndPosition();
-                        if(checkPos.equals(kingPos)){
-                            return true;
-                        }
+                        check = check || checkPos.equals(kingPos);
                     }
                 }
             }
         }
-        return false;
+        return check;
 
         //throw new RuntimeException("Not implemented");
     }
@@ -166,12 +165,10 @@ public class ChessGame {
         }
         for(int i  = 1; i < 9; i++){
             for(int j  = 1; j < 9; j++) {
-                if(board.getPiece(new ChessPosition(i, j)) != null){
-                    if(board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
+                if(board.getPiece(new ChessPosition(i, j)) != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
+                    Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
+                    if (!moves.isEmpty()) {
+                        return false;
                     }
                 }
             }
@@ -193,13 +190,13 @@ public class ChessGame {
         }
         for(int i  = 1; i < 9; i++){
             for(int j  = 1; j < 9; j++) {
-                if(board.getPiece(new ChessPosition(i, j)) != null){
-                    if(board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
+                if(board.getPiece(new ChessPosition(i, j)) != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
+
+                    Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
+                    if (!moves.isEmpty()) {
+                        return false;
                     }
+
                 }
             }
         }

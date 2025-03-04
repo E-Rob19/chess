@@ -3,9 +3,9 @@ package chess;
 import java.util.ArrayList;
 //import java.util.Collection;
 
-public class calculateMoves {
+public class CalculateMoves {
     //private final ChessPiece.PieceType type;
-    public calculateMoves(){ //ChessPiece.PieceType type) {
+    public CalculateMoves(){ //ChessPiece.PieceType type) {
         //this.type = type;
     }
 
@@ -282,13 +282,10 @@ public class calculateMoves {
                         movs.add(mov);
                     }
                 }
-                if (board.getPiece(myPosition).getinitialMove()){
-                    board.getPiece(myPosition).setinitialMove();
-                    if(myPosition.getRow() == 2 && board.getPiece(new ChessPosition(row+1, col))==null) {
-                        pos = new ChessPosition(row + 2, col);
-                        if (board.getPiece(pos) == null){
-                            movs.add(new ChessMove(myPosition, pos, null));
-                        }
+                if (board.getPiece(myPosition).getinitialMove() && myPosition.getRow() == 2 && board.getPiece(new ChessPosition(row+1, col))==null){
+                    pos = new ChessPosition(row + 2, col);
+                    if (board.getPiece(pos) == null){
+                        movs.add(new ChessMove(myPosition, pos, null));
                     }
                 }
             }
@@ -344,13 +341,10 @@ public class calculateMoves {
                         movs.add(mov);
                     }
                 }
-                if (board.getPiece(myPosition).getinitialMove()){
-                    board.getPiece(myPosition).setinitialMove();
-                    if(row == 7 && board.getPiece(new ChessPosition(row-1, col))==null) {
-                        pos = new ChessPosition(row - 2, col);
-                        if (board.getPiece(pos) == null){
-                            movs.add(new ChessMove(myPosition, pos, null));
-                        }
+                if (board.getPiece(myPosition).getinitialMove() && row == 7 && board.getPiece(new ChessPosition(row-1, col))==null){
+                    pos = new ChessPosition(row - 2, col);
+                    if (board.getPiece(pos) == null){
+                        movs.add(new ChessMove(myPosition, pos, null));
                     }
                 }
             }

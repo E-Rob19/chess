@@ -70,7 +70,9 @@ public class ChessPiece {
     }
 
     public boolean getinitialMove() {
-        return initialMove;
+        boolean temp = initialMove;
+        setinitialMove();
+        return temp;
     }
 
     public void setinitialMove() {
@@ -85,7 +87,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        calculateMoves calculator = new calculateMoves();
+        CalculateMoves calculator = new CalculateMoves();
         return calculator.calulate(this.type, board, myPosition);
     }
 

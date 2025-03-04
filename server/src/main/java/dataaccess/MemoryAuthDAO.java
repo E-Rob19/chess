@@ -1,18 +1,17 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDataAccess{
 
-    private static final ArrayList<AuthData> auths = new ArrayList<>();
+    private static final ArrayList<AuthData> Auths = new ArrayList<>();
 
     @Override
     public AuthData getAuth(String username) throws DataAccessException {
-        for (AuthData auth : auths) {
+        for (AuthData auth : Auths) {
             if (auth.username().equals(username)) {
                 return auth;
             }
@@ -21,7 +20,7 @@ public class MemoryAuthDAO implements AuthDataAccess{
     }
 
     public AuthData getAuthFromToken(String authToken) throws DataAccessException {
-        for (AuthData auth : auths) {
+        for (AuthData auth : Auths) {
             if (auth.authToken().equals(authToken)) {
                 return auth;
             }
@@ -31,32 +30,26 @@ public class MemoryAuthDAO implements AuthDataAccess{
 
     @Override
     public ArrayList<AuthData> listAuths() throws DataAccessException{
-        return auths;
+        return Auths;
     }
 
-    public static String generateToken() {
-        return UUID.randomUUID().toString();
-    }
+    //public static String generateToken() {
+    //    return UUID.randomUUID().toString();
 
     @Override
     public void createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString(); //generateToken();
-        auths.addFirst(new AuthData(authToken, username));
+        Auths.addFirst(new AuthData(authToken, username));
 
     }
 
     @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
-        auths.remove(auth);
-        //for (AuthData a : auths) {
-          //  if (a.authToken().equals(auth.authToken())) {
-            //    auths.remove(a);
-            //}
-        //}
+        Auths.remove(auth);
     }
 
     @Override
     public void clear() throws DataAccessException {
-        auths.clear();
+        Auths.clear();
     }
 }

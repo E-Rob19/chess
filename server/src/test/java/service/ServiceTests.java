@@ -52,9 +52,9 @@ class ServiceTests {
         ArrayList<AuthData> authDatabase = service.authDatabase.listAuths();
         ArrayList<UserData> userDatabase = service.userDatabase.listUsers();
         ArrayList<GameData> gameDatabase = service.gameDatabase.listGames();
-        //AuthDataAccess authDatabase = service.authDatabase;
-        //UserDataAccess userDatabase = service.userDatabase;
-        //GameDataAccess gameDatabase = service.gameDatabase;
+        //AuthDataAccess authDatabase = service.authDatabase
+        //UserDataAccess userDatabase = service.userDatabase
+        //GameDataAccess gameDatabase = service.gameDatabase
         assertEquals(userDatabase, userList);
         assertEquals(authDatabase, authList);
         assertEquals(gameDatabase, gameList);

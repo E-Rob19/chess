@@ -59,5 +59,6 @@ public class MemoryGameDAO implements GameDataAccess{
     @Override
     public void clear() throws DataAccessException {
         GAMES.clear();
+        gameNum = 1;
     }
 }

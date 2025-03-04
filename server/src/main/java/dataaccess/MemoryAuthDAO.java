@@ -7,11 +7,11 @@ import java.util.UUID;
 
 public class MemoryAuthDAO implements AuthDataAccess{
 
-    private static final ArrayList<AuthData> Auths = new ArrayList<>();
+    private static final ArrayList<AuthData> AUTHS = new ArrayList<>();
 
     @Override
     public AuthData getAuth(String username) throws DataAccessException {
-        for (AuthData auth : Auths) {
+        for (AuthData auth : AUTHS) {
             if (auth.username().equals(username)) {
                 return auth;
             }
@@ -20,7 +20,7 @@ public class MemoryAuthDAO implements AuthDataAccess{
     }
 
     public AuthData getAuthFromToken(String authToken) throws DataAccessException {
-        for (AuthData auth : Auths) {
+        for (AuthData auth : AUTHS) {
             if (auth.authToken().equals(authToken)) {
                 return auth;
             }
@@ -30,7 +30,7 @@ public class MemoryAuthDAO implements AuthDataAccess{
 
     @Override
     public ArrayList<AuthData> listAuths() throws DataAccessException{
-        return Auths;
+        return AUTHS;
     }
 
     //public static String generateToken() {
@@ -39,17 +39,17 @@ public class MemoryAuthDAO implements AuthDataAccess{
     @Override
     public void createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString(); //generateToken();
-        Auths.addFirst(new AuthData(authToken, username));
+        AUTHS.addFirst(new AuthData(authToken, username));
 
     }
 
     @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
-        Auths.remove(auth);
+        AUTHS.remove(auth);
     }
 
     @Override
     public void clear() throws DataAccessException {
-        Auths.clear();
+        AUTHS.clear();
     }
 }

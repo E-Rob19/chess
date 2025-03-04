@@ -4,9 +4,9 @@ import java.util.ArrayList;
 //import java.util.Collection;
 
 public class CalculateMoves {
-    //private final ChessPiece.PieceType type;
-    public CalculateMoves(){ //ChessPiece.PieceType type) {
-        //this.type = type;
+
+    public CalculateMoves(){
+
     }
 
     public ArrayList<ChessMove> calulate(ChessPiece.PieceType type, ChessBoard board, ChessPosition myPosition){
@@ -212,16 +212,7 @@ public class CalculateMoves {
         int col1 = myPosition.getColumn();
         ChessMove mov;
         row -= 2; row1 += 2; col -= 1; col1 += 1;
-        if(row>0) {
-            if (col>0) {
-                mov = checkSpace(board, myPosition, new ChessPosition(row, col));
-                if (mov != null) {movs.add(mov);}
-            }
-            if (col1<9) {
-                mov = checkSpace(board, myPosition, new ChessPosition(row, col1));
-                if (mov != null) {movs.add(mov);}
-            }
-        }
+        knightHelper(row, row1, col, col1, movs, board, myPosition);
         if(row1<9) {
             if (col>0) {
                 mov = checkSpace(board, myPosition, new ChessPosition(row1, col));
@@ -233,16 +224,7 @@ public class CalculateMoves {
             }
         }
         row += 1; row1 -= 1; col -= 1; col1 += 1;
-        if(row>0) {
-            if (col>0) {
-                mov = checkSpace(board, myPosition, new ChessPosition(row, col));
-                if (mov != null) {movs.add(mov);}
-            }
-            if (col1<9) {
-                mov = checkSpace(board, myPosition, new ChessPosition(row, col1));
-                if (mov != null) {movs.add(mov);}
-            }
-        }
+        knightHelper(row, row1, col, col1, movs, board, myPosition);
         if(row1<9) {
             if (col>0) {
                 mov = checkSpace(board, myPosition, new ChessPosition(row1, col));
@@ -254,6 +236,20 @@ public class CalculateMoves {
             }
         }
         return movs;
+    }
+
+    private void knightHelper(int row, int row1, int col, int col1, ArrayList<ChessMove> movs, ChessBoard board, ChessPosition myPosition){
+        ChessMove mov;
+        if(row>0) {
+            if (col>0) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col));
+                if (mov != null) {movs.add(mov);}
+            }
+            if (col1<9) {
+                mov = checkSpace(board, myPosition, new ChessPosition(row, col1));
+                if (mov != null) {movs.add(mov);}
+            }
+        }
     }
 
     private ArrayList<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition){
@@ -291,12 +287,7 @@ public class CalculateMoves {
             }
             if (row == 7){
                 pos = new ChessPosition(row+1, col);
-                if (board.getPiece(pos) == null){
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.QUEEN));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.BISHOP));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.KNIGHT));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.ROOK));
-                }
+                movs = pawnHelper(pos, myPosition, board, movs);
                 if (col < 7) {
                     pos = new ChessPosition(row + 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
@@ -350,12 +341,7 @@ public class CalculateMoves {
             }
             if (row == 2){
                 pos = new ChessPosition(row-1, col);
-                if (board.getPiece(pos) == null){
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.QUEEN));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.BISHOP));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.KNIGHT));
-                    movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.ROOK));
-                }
+                movs = pawnHelper(pos, myPosition, board, movs);
                 if (col < 7) {
                     pos = new ChessPosition(row - 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos, ChessPiece.PieceType.QUEEN);
@@ -379,6 +365,16 @@ public class CalculateMoves {
                     if (mov != null) { movs.add(mov);}
                 }
             }
+        }
+        return movs;
+    }
+
+    private ArrayList<ChessMove> pawnHelper(ChessPosition pos, ChessPosition myPosition, ChessBoard board, ArrayList<ChessMove> movs){
+        if (board.getPiece(pos) == null){
+            movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.QUEEN));
+            movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.BISHOP));
+            movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.KNIGHT));
+            movs.add(new ChessMove(myPosition, pos, ChessPiece.PieceType.ROOK));
         }
         return movs;
     }

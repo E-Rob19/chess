@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class MemoryUserDAO implements UserDataAccess {
 
-    private static final ArrayList<UserData> Users = new ArrayList<>();
+    private static final ArrayList<UserData> USERS = new ArrayList<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        for (UserData user : Users) {
+        for (UserData user : USERS) {
             if (user.username().equals(username)) {
                 return user;
             }
@@ -20,15 +20,15 @@ public class MemoryUserDAO implements UserDataAccess {
 
     @Override
     public ArrayList<UserData> listUsers() throws DataAccessException {
-        return Users;
+        return USERS;
     }
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        Users.add(user);
+        USERS.add(user);
     }
 
     public void clear(){
-        Users.clear();
+        USERS.clear();
     }
 }

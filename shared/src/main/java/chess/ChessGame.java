@@ -163,6 +163,11 @@ public class ChessGame {
         if(!isInCheck(teamColor)){
             return false;
         }
+        return checkCheck(teamColor);
+        //throw new RuntimeException("Not implemented")
+    }
+
+    private boolean checkCheck(TeamColor teamColor){
         for(int i  = 1; i < 9; i++){
             for(int j  = 1; j < 9; j++) {
                 if(board.getPiece(new ChessPosition(i, j)) != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
@@ -174,7 +179,6 @@ public class ChessGame {
             }
         }
         return true;
-        //throw new RuntimeException("Not implemented");
     }
 
     /**
@@ -188,19 +192,7 @@ public class ChessGame {
         if(isInCheck(teamColor)){
             return false;
         }
-        for(int i  = 1; i < 9; i++){
-            for(int j  = 1; j < 9; j++) {
-                if(board.getPiece(new ChessPosition(i, j)) != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
-
-                    Collection<ChessMove> moves = validMoves(new ChessPosition(i, j));
-                    if (!moves.isEmpty()) {
-                        return false;
-                    }
-
-                }
-            }
-        }
-        return true;
+        return checkCheck(teamColor);
     }
 
     /**

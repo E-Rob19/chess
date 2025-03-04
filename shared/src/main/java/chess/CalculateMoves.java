@@ -105,22 +105,17 @@ public class CalculateMoves {
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        ChessMove mov;
-        ChessPosition pos;
+        ChessMove mov; ChessPosition pos;
         if (row>1 && row<8 && col>1 && col<8) {
             for(int i = -1; i < 2; i++) {
                 pos = new ChessPosition(row+i, col-1);
                 mov = checkSpace(board, myPosition, pos);
-                if (mov != null) {
-                    movs.add(mov);
-                }
+                if (mov != null) { movs.add(mov); }
             }
             for(int i = -1; i < 2; i++) {
                 pos = new ChessPosition(row+i, col+1);
                 mov = checkSpace(board, myPosition, pos);
-                if (mov != null) {
-                    movs.add(mov);
-                }
+                if (mov != null) { movs.add(mov); }
             }
             pos = new ChessPosition(row+1, col);
             mov = checkSpace(board, myPosition, pos);
@@ -256,33 +251,24 @@ public class CalculateMoves {
         ArrayList<ChessMove> movs = new ArrayList<ChessMove>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
-        ChessMove mov;
-        ChessPosition pos = new ChessPosition(row, col);
+        ChessMove mov; ChessPosition pos = new ChessPosition(row, col);
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
             if(row < 7) {
                 pos = new ChessPosition(row+1, col);
-                if (board.getPiece(pos) == null){
-                    movs.add(new ChessMove(myPosition, pos, null));
-                }
+                if (board.getPiece(pos) == null){  movs.add(new ChessMove(myPosition, pos, null));}
                 if (col < 7) {
                     pos = new ChessPosition(row + 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos);
-                    if (mov != null) {
-                        movs.add(mov);
-                    }
+                    if (mov != null) { movs.add(mov); }
                 }
                 if (col > 1) {
                     pos = new ChessPosition(row + 1, col - 1);
                     mov = checkSpacePawn(board, myPosition, pos);
-                    if (mov != null) {
-                        movs.add(mov);
-                    }
+                    if (mov != null) { movs.add(mov); }
                 }
                 if (board.getPiece(myPosition).getinitialMove() && myPosition.getRow() == 2 && board.getPiece(new ChessPosition(row+1, col))==null){
                     pos = new ChessPosition(row + 2, col);
-                    if (board.getPiece(pos) == null){
-                        movs.add(new ChessMove(myPosition, pos, null));
-                    }
+                    if (board.getPiece(pos) == null){ movs.add(new ChessMove(myPosition, pos, null)); }
                 }
             }
             if (row == 7){
@@ -315,28 +301,20 @@ public class CalculateMoves {
         if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
             if(row > 2) {
                 pos = new ChessPosition(row-1, col);
-                if (board.getPiece(pos) == null){
-                    movs.add(new ChessMove(myPosition, pos, null));
-                }
+                if (board.getPiece(pos) == null){ movs.add(new ChessMove(myPosition, pos, null)); }
                 if (col < 7) {
                     pos = new ChessPosition(row - 1, col + 1);
                     mov = checkSpacePawn(board, myPosition, pos);
-                    if (mov != null) {
-                        movs.add(mov);
-                    }
+                    if (mov != null) { movs.add(mov); }
                 }
                 if (col > 1) {
                     pos = new ChessPosition(row - 1, col - 1);
                     mov = checkSpacePawn(board, myPosition, pos);
-                    if (mov != null) {
-                        movs.add(mov);
-                    }
+                    if (mov != null) { movs.add(mov); }
                 }
                 if (board.getPiece(myPosition).getinitialMove() && row == 7 && board.getPiece(new ChessPosition(row-1, col))==null){
                     pos = new ChessPosition(row - 2, col);
-                    if (board.getPiece(pos) == null){
-                        movs.add(new ChessMove(myPosition, pos, null));
-                    }
+                    if (board.getPiece(pos) == null){ movs.add(new ChessMove(myPosition, pos, null)); }
                 }
             }
             if (row == 2){

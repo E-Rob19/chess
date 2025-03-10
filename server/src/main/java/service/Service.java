@@ -6,9 +6,21 @@ import model.GameData;
 import model.UserData;
 
 public class Service {
-    UserDataAccess userDatabase = new MemoryUserDAO();
-    AuthDataAccess authDatabase = new MemoryAuthDAO();
-    GameDataAccess gameDatabase = new MemoryGameDAO();
+    //UserDataAccess userDatabase = new MemoryUserDAO()
+    //AuthDataAccess authDatabase = new MemoryAuthDAO()
+    //GameDataAccess gameDatabase = new MemoryGameDAO()
+
+    UserDataAccess userDatabase;
+    AuthDataAccess authDatabase;
+    GameDataAccess gameDatabase;
+
+    public Service() throws DataAccessException {
+        userDatabase = new SQLUserDAO();
+        authDatabase = new SQLAuthDAO();
+        gameDatabase = new SQLGameDAO();
+        DatabaseManager.createDatabase();
+        DatabaseManager.createTables();
+    }
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException {
         if(userDatabase.getUser(registerRequest.username())==null){

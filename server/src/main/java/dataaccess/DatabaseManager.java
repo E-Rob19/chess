@@ -10,7 +10,7 @@ public class DatabaseManager {
     private static final String CONNECTION_URL;
 
 //    public static void main(String[] args) throws DataAccessException {
-//        createDatabase();
+//        createDatabase()
 //    }
 
     /*
@@ -40,7 +40,7 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
@@ -52,7 +52,7 @@ public class DatabaseManager {
         }
     }
 
-    static void createTables() throws DataAccessException {
+    public static void createTables() throws DataAccessException {
         try {
             var statement = """
             CREATE TABLE  IF NOT EXISTS users (
@@ -70,7 +70,7 @@ public class DatabaseManager {
             CREATE TABLE  IF NOT EXISTS auths (
                 authToken VARCHAR(255) NOT NULL,
                 username VARCHAR(255) NOT NULL,
-                PRIMARY KEY (username)
+                PRIMARY KEY (authToken)
             )""";
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();

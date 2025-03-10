@@ -38,7 +38,7 @@ public class SQLGameDAO implements GameDataAccess{
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?, ?, ?)";
         execute(statement, null, null, null, gameName, new ChessGame());
         return 0;
     }
@@ -90,8 +90,14 @@ public class SQLGameDAO implements GameDataAccess{
     }
 
     @Override
-    public void addPlayer(int gameID, String username, String playerColor) {
-
+    public void addPlayer(int gameID, String username, String playerColor) throws DataAccessException {
+        String statement = "";
+        if(playerColor.equals("WHITE")){
+            statement = "UPDATE games SET whiteUsername = ? WHERE gameID = ?;";
+        } else if (playerColor.equals("BLACK")) {
+            statement = "UPDATE games SET blackUsername = ? WHERE gameID = ?;";
+        }
+        execute(statement, username, gameID);
     }
 
     @Override

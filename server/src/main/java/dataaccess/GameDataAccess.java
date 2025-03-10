@@ -15,7 +15,7 @@ public interface GameDataAccess {
 
     ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException;
 
-    void addPlayer(int gameID, String username, String playerColor);
+    void addPlayer(int gameID, String username, String playerColor) throws DataAccessException;
 
     void clear() throws DataAccessException;
 

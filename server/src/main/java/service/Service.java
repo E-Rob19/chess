@@ -5,6 +5,10 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
+import java.sql.SQLException;
+
+import static java.sql.Types.NULL;
+
 public class Service {
     //UserDataAccess userDatabase = new MemoryUserDAO()
     //AuthDataAccess authDatabase = new MemoryAuthDAO()
@@ -107,4 +111,7 @@ public class Service {
         authDatabase.clear();
         gameDatabase.clear();
     }
+
+
+
 }

@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,7 +59,8 @@ public class SQLUserDAO implements UserDataAccess{
     @Override
     public void createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        execute(statement, user.username(), user.password(), user.email());
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        execute(statement, user.username(), hashedPassword, user.email());
     }
 
     @Override

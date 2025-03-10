@@ -4,6 +4,7 @@ import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
@@ -40,7 +41,7 @@ public class Service {
         if(user == null){
             return null;
         }
-        if(user.password().equals(loginRequest.password())){
+        if(user.password().equals(loginRequest.password()) || BCrypt.checkpw(loginRequest.password(), user.password())){
             //authDatabase.deleteAuth(authDatabase.getAuth(user.username()));
             authDatabase.createAuth(loginRequest.username());
             return new RegisterResult(loginRequest.username(), authDatabase.getAuth(loginRequest.username()).authToken());

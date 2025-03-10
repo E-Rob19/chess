@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import static java.sql.Types.NULL;
 
 public class SQLGameDAO implements GameDataAccess{
+
+    static int gameNum = 1;
+
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
@@ -38,9 +41,10 @@ public class SQLGameDAO implements GameDataAccess{
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?, ?, ?)";
-        execute(statement, null, null, null, gameName, new ChessGame());
-        return 0;
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?, ?)";
+        execute(statement,  null, null, gameName, new ChessGame());
+        gameNum = gameNum + 1;
+        return gameNum-1;
     }
 
     @Override
@@ -103,6 +107,7 @@ public class SQLGameDAO implements GameDataAccess{
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE games";
+        gameNum = 1;
         execute(statement);
     }
 

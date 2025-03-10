@@ -20,7 +20,9 @@ public class SQLAuthDAO implements AuthDataAccess{
                 ps.setString(1, username);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return readAuth(rs);
+                        String authToken = rs.getString("authToken");
+                        String un = rs.getString("username");
+                        return new AuthData(authToken, un);
                     }
                 }
             }
@@ -28,12 +30,6 @@ public class SQLAuthDAO implements AuthDataAccess{
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
-    }
-
-    private AuthData readAuth(ResultSet rs) throws SQLException {
-        var json = rs.getString("json");
-        AuthData auth = new Gson().fromJson(json, AuthData.class);
-        return auth;
     }
 
     @Override
@@ -44,7 +40,9 @@ public class SQLAuthDAO implements AuthDataAccess{
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        result.add(readAuth(rs));
+                        String authToken = rs.getString("authToken");
+                        String un = rs.getString("username");
+                        result.add(new AuthData(authToken, un));
                     }
                 }
             }
@@ -62,7 +60,9 @@ public class SQLAuthDAO implements AuthDataAccess{
                 ps.setString(1, authToken);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return readAuth(rs);
+                        String aT = rs.getString("authToken");
+                        String un = rs.getString("username");
+                        return new AuthData(aT, un);
                     }
                 }
             }

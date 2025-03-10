@@ -21,7 +21,10 @@ public class SQLUserDAO implements UserDataAccess{
                 ps.setString(1, username);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return readUser(rs);
+                        String password = rs.getString("password");
+                        String un = rs.getString("username");
+                        String email = rs.getString("email");
+                        return new UserData(un, password, email);
                     }
                 }
             }
@@ -29,12 +32,6 @@ public class SQLUserDAO implements UserDataAccess{
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
-    }
-
-    private UserData readUser(ResultSet rs) throws SQLException {
-        var json = rs.getString("json");
-        UserData user = new Gson().fromJson(json, UserData.class);
-        return user;
     }
 
     @Override
@@ -45,7 +42,10 @@ public class SQLUserDAO implements UserDataAccess{
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        result.add(readUser(rs));
+                        String password = rs.getString("password");
+                        String un = rs.getString("username");
+                        String email = rs.getString("email");
+                        result.add(new UserData(un, password, email));
                     }
                 }
             }

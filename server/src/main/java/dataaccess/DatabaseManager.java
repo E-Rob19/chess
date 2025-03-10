@@ -52,6 +52,46 @@ public class DatabaseManager {
         }
     }
 
+    static void createTables() throws DataAccessException {
+        try {
+            var statement = """
+            CREATE TABLE  IF NOT EXISTS users (
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email VARCHAR(255) NOT NULL,
+                PRIMARY KEY (username)
+            )""";
+            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+            conn.setCatalog("chess");
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+            statement = """
+            CREATE TABLE  IF NOT EXISTS auths (
+                authToken VARCHAR(255) NOT NULL,
+                username VARCHAR(255) NOT NULL,
+                PRIMARY KEY (username)
+            )""";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+            statement = """
+            CREATE TABLE  IF NOT EXISTS games (
+                gameID INT NOT NULL AUTO_INCREMENT,
+                whiteUsername VARCHAR(255),
+                blackUsername VARCHAR(255),
+                gameName VARCHAR(255) NOT NULL,
+                chessGame LONGTEXT,
+                PRIMARY KEY (gameID)
+            )""";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
     /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should

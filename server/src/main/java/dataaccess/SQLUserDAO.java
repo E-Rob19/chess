@@ -8,6 +8,7 @@ import model.UserData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static java.sql.Types.NULL;
 
@@ -40,7 +41,7 @@ public class SQLUserDAO implements UserDataAccess{
     public ArrayList<UserData> listUsers() throws DataAccessException {
         var result = new ArrayList<UserData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT * FROM auths";
+            var statement = "SELECT * FROM users";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -56,12 +57,14 @@ public class SQLUserDAO implements UserDataAccess{
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        execute(statement, user.username(), user.password(), user.email());
     }
 
     @Override
     public void clear() throws DataAccessException {
-
+        var statement = "TRUNCATE users";
+        execute(statement);
     }
 
     private void execute(String statement, Object... things) throws  DataAccessException {

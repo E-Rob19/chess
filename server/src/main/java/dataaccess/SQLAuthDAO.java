@@ -74,7 +74,7 @@ public class SQLAuthDAO implements AuthDataAccess{
 
     @Override
     public void createAuth(String username) throws DataAccessException {
-        var statement = "INSERT INTO auths (authToken, username) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO auths (authToken, username) VALUES (?, ?)";
         execute(statement, UUID.randomUUID().toString(), username);
     }
 

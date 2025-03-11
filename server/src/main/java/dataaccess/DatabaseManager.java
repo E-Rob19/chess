@@ -62,7 +62,7 @@ public class DatabaseManager {
                 PRIMARY KEY (username)
             )""";
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-            conn.setCatalog("chess");
+            conn.setCatalog(DATABASE_NAME);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }

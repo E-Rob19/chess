@@ -42,11 +42,11 @@ public class Service {
             return null;
         }
         if(user.password().equals(loginRequest.password()) || BCrypt.checkpw(loginRequest.password(), user.password())){
-            String oldAuth = authDatabase.getAuth(user.username()).authToken();
-            authDatabase.deleteAuth(authDatabase.getAuth(user.username()));
-            authDatabase.createAuth(loginRequest.username());
-            authDatabase.createAuthWithAuth(loginRequest.username(), oldAuth);
-            return new RegisterResult(loginRequest.username(), authDatabase.getAuth(loginRequest.username()).authToken());
+            //String oldAuth = authDatabase.getAuth(user.username()).authToken();
+            //authDatabase.deleteAuth(authDatabase.getAuth(user.username()));
+            String authToken = authDatabase.createAuth(loginRequest.username());
+            //authDatabase.createAuthWithAuth(loginRequest.username(), oldAuth);
+            return new RegisterResult(loginRequest.username(), authToken);
         }
         return null;
     }

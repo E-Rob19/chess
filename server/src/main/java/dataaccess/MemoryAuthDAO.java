@@ -37,10 +37,10 @@ public class MemoryAuthDAO implements AuthDataAccess{
     //    return UUID.randomUUID().toString();
 
     @Override
-    public void createAuth(String username) throws DataAccessException {
+    public String createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString(); //generateToken();
         AUTHS.addFirst(new AuthData(authToken, username));
-
+        return authToken;
     }
 
     @Override

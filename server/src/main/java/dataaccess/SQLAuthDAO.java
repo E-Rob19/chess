@@ -79,6 +79,12 @@ public class SQLAuthDAO implements AuthDataAccess{
     }
 
     @Override
+    public void createAuthWithAuth(String username, String auth) throws DataAccessException {
+        var statement = "INSERT INTO auths (authToken, username) VALUES (?, ?)";
+        execute(statement, auth, username);
+    }
+
+    @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
         var statement = "DELETE FROM auths WHERE authToken=?";
         execute(statement, auth.authToken());

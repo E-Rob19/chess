@@ -52,4 +52,8 @@ public class MemoryAuthDAO implements AuthDataAccess{
     public void clear() throws DataAccessException {
         AUTHS.clear();
     }
+
+    public void createAuthWithAuth(String username, String auth) throws DataAccessException{
+
+    }
 }

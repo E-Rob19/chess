@@ -9,9 +9,6 @@ public class DatabaseManager {
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
 
-//    public static void main(String[] args) throws DataAccessException {
-//        createDatabase()
-//    }
 
     /*
      * Load the database information for the db.properties file.

@@ -11,9 +11,6 @@ import java.sql.SQLException;
 import static java.sql.Types.NULL;
 
 public class Service {
-    //UserDataAccess userDatabase = new MemoryUserDAO()
-    //AuthDataAccess authDatabase = new MemoryAuthDAO()
-    //GameDataAccess gameDatabase = new MemoryGameDAO()
 
     UserDataAccess userDatabase;
     AuthDataAccess authDatabase;
@@ -42,10 +39,7 @@ public class Service {
             return null;
         }
         if(user.password().equals(loginRequest.password()) || BCrypt.checkpw(loginRequest.password(), user.password())){
-            //String oldAuth = authDatabase.getAuth(user.username()).authToken();
-            //authDatabase.deleteAuth(authDatabase.getAuth(user.username()));
             String authToken = authDatabase.createAuth(loginRequest.username());
-            //authDatabase.createAuthWithAuth(loginRequest.username(), oldAuth);
             return new RegisterResult(loginRequest.username(), authToken);
         }
         return null;

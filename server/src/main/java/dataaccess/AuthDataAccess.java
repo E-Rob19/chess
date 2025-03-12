@@ -17,6 +17,4 @@ public interface AuthDataAccess {
 
     void clear() throws DataAccessException;
 
-    public void createAuthWithAuth(String username, String auth) throws DataAccessException;
-
 }

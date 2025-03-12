@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static java.sql.Types.NULL;
 
-public class SQLUserDAO implements UserDataAccess{
+public class SQLUserDAO implements UserDataAccess {
     @Override
     public UserData getUser(String username) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
@@ -60,29 +60,13 @@ public class SQLUserDAO implements UserDataAccess{
     public void createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        execute(statement, user.username(), hashedPassword, user.email());
+        SQLAuthDAO.execute(statement, user.username(), hashedPassword, user.email());
     }
 
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE users";
-        execute(statement);
-    }
-
-    private void execute(String statement, Object... things) throws  DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var prep = conn.prepareStatement(statement)) {
-                for (var i = 0; i < things.length; i++) {
-                    var param = things[i];
-                    if (param instanceof String p) prep.setString(i + 1, p);
-                    else if (param instanceof Integer p) prep.setInt(i + 1, p);
-                    else if (param instanceof ChessGame p) prep.setString(i + 1, p.toString());
-                    else if (param == null) prep.setNull(i + 1, NULL);
-                }
-                prep.executeUpdate();
-            }
-        } catch (DataAccessException | SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
-        }
+        SQLAuthDAO.execute(statement);
     }
 }
+

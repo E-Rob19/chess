@@ -81,12 +81,6 @@ public class SQLAuthDAO implements AuthDataAccess{
     }
 
     @Override
-    public void createAuthWithAuth(String username, String auth) throws DataAccessException {
-        var statement = "INSERT INTO auths (authToken, username) VALUES (?, ?)";
-        execute(statement, auth, username);
-    }
-
-    @Override
     public void deleteAuth(AuthData auth) throws DataAccessException {
         var statement = "DELETE FROM auths WHERE authToken=?";
         execute(statement, auth.authToken());
@@ -98,15 +92,15 @@ public class SQLAuthDAO implements AuthDataAccess{
         execute(statement);
     }
 
-    private void execute(String statement, Object... things) throws  DataAccessException {
+    public static void execute(String statement, Object... things) throws  DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var prep = conn.prepareStatement(statement)) {
                 for (var i = 0; i < things.length; i++) {
                     var param = things[i];
-                    if (param instanceof String p) prep.setString(i + 1, p);
-                    else if (param instanceof Integer p) prep.setInt(i + 1, p);
-                    else if (param instanceof ChessGame p) prep.setString(i + 1, p.toString());
-                    else if (param == null) prep.setNull(i + 1, NULL);
+                    if (param instanceof String p) {prep.setString(i + 1, p);}
+                    else if (param instanceof Integer p) {prep.setInt(i + 1, p);}
+                    else if (param instanceof ChessGame p) {prep.setString(i + 1, p.toString());}
+                    else if (param == null) {prep.setNull(i + 1, NULL);}
                 }
                 prep.executeUpdate();
             }

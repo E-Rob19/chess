@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import static java.sql.Types.NULL;
 
-public class SQLGameDAO implements GameDataAccess{
+public class SQLGameDAO implements GameDataAccess {
 
     static int gameNum = 1;
 
@@ -42,9 +42,9 @@ public class SQLGameDAO implements GameDataAccess{
     @Override
     public int createGame(String gameName) throws DataAccessException {
         var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?, ?)";
-        execute(statement,  null, null, gameName, new ChessGame());
+        SQLAuthDAO.execute(statement, null, null, gameName, new ChessGame());
         gameNum = gameNum + 1;
-        return gameNum-1;
+        return gameNum - 1;
     }
 
     @Override
@@ -96,35 +96,18 @@ public class SQLGameDAO implements GameDataAccess{
     @Override
     public void addPlayer(int gameID, String username, String playerColor) throws DataAccessException {
         String statement = "";
-        if(playerColor.equals("WHITE")){
+        if (playerColor.equals("WHITE")) {
             statement = "UPDATE games SET whiteUsername = ? WHERE gameID = ?;";
         } else if (playerColor.equals("BLACK")) {
             statement = "UPDATE games SET blackUsername = ? WHERE gameID = ?;";
         }
-        execute(statement, username, gameID);
+        SQLAuthDAO.execute(statement, username, gameID);
     }
 
     @Override
     public void clear() throws DataAccessException {
         var statement = "TRUNCATE games";
         gameNum = 1;
-        execute(statement);
-    }
-
-    private void execute(String statement, Object... things) throws  DataAccessException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var prep = conn.prepareStatement(statement)) {
-                for (var i = 0; i < things.length; i++) {
-                    var param = things[i];
-                    if (param instanceof String p) prep.setString(i + 1, p);
-                    else if (param instanceof Integer p) prep.setInt(i + 1, p);
-                    else if (param instanceof ChessGame p) prep.setString(i + 1, new Gson().toJson(p));
-                    else if (param == null) prep.setNull(i + 1, NULL);
-                }
-                prep.executeUpdate();
-            }
-        } catch (DataAccessException | SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
-        }
+        SQLAuthDAO.execute(statement);
     }
 }

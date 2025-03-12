@@ -29,7 +29,7 @@ public class DatabaseTests {
     static GameDataAccess gameDatabase;
 
     @AfterAll
-    static void stopServer() throws DataAccessException {
+    static void clearAll() throws DataAccessException {
         userDatabase.clear();
         authDatabase.clear();
         gameDatabase.clear();
@@ -53,9 +53,7 @@ public class DatabaseTests {
         AuthData actual = authDatabase.getAuth("emma");
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void getAuthTestNegative() throws DataAccessException {
@@ -64,9 +62,7 @@ public class DatabaseTests {
         AuthData actual = authDatabase.getAuth("emma");
 
         assertNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
 
     //listAuth
@@ -82,25 +78,15 @@ public class DatabaseTests {
         ArrayList<AuthData> actual = authDatabase.listAuths();
 
         assertTrue(actual.containsAll(expected));
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void listAuthTestNegative() throws DataAccessException {
-        //String auth1 = authDatabase.createAuth("emma");
-        //String auth2 = authDatabase.createAuth("leslie");
-        //AuthData authData1 = new AuthData(auth1, "emma");
-        //AuthData authData2 = new AuthData(auth2, "leslie")
         ArrayList<AuthData> expected = new ArrayList<AuthData>();
-        //expected.add(authData1);
-        //expected.add(authData2)
         ArrayList<AuthData> actual = authDatabase.listAuths();
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //createAuths
     @Test
@@ -110,9 +96,7 @@ public class DatabaseTests {
         AuthData actual = authDatabase.getAuth("leslie");
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void createAuthTestNegative() throws DataAccessException {
@@ -121,9 +105,7 @@ public class DatabaseTests {
         AuthData actual = authDatabase.getAuth("lemma");
 
         assertNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //deleteAuth
     @Test
@@ -135,9 +117,7 @@ public class DatabaseTests {
         actual = authDatabase.getAuth("leslie");
 
         assertNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void deleteAuthTestNegative() throws DataAccessException {
@@ -148,9 +128,7 @@ public class DatabaseTests {
         actual = authDatabase.getAuth("leslie");
 
         assertNotNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //clear
     @Test
@@ -164,9 +142,7 @@ public class DatabaseTests {
         ArrayList<AuthData> empty = new ArrayList<>();
 
         assertEquals(empty, auths);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
 
     //getUser
@@ -177,18 +153,14 @@ public class DatabaseTests {
         UserData actual = userDatabase.getUser("emma");
 
         assertTrue(BCrypt.checkpw(expected.password(), actual.password()));
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void getUserTestNegative() throws DataAccessException {
         UserData actual = userDatabase.getUser("emma");
 
         assertNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //listUser
     @Test
@@ -203,9 +175,7 @@ public class DatabaseTests {
         ArrayList<UserData> actual = userDatabase.listUsers();
 
         assertEquals(expected.size(), actual.size());
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void listUserTestNegative() throws DataAccessException {
@@ -213,9 +183,7 @@ public class DatabaseTests {
         ArrayList<UserData> actual = userDatabase.listUsers();
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //createUser
     @Test
@@ -225,17 +193,13 @@ public class DatabaseTests {
         UserData actual = userDatabase.getUser("emma");
 
         assertTrue(BCrypt.checkpw(expected.password(), actual.password()));
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void createUserTestNegative() throws DataAccessException {
         userDatabase.createUser(new UserData("emma", "password", "email"));
         assertThrows(DataAccessException.class, () -> userDatabase.createUser(new UserData("emma", "password", "email")));
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //clear
     @Test
@@ -247,9 +211,7 @@ public class DatabaseTests {
         ArrayList<UserData> actual = userDatabase.listUsers();
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
 
     //getGame
@@ -260,30 +222,24 @@ public class DatabaseTests {
         GameData expected = new GameData(1, null, null, "name", actual.game());
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void getGameTestNegative() throws DataAccessException {
         GameData actual = gameDatabase.getGame(1);
 
         assertNull(actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //createGame
     @Test
     void createGameTestPositive() throws DataAccessException {
-        gameDatabase.createGame("name");
+        gameDatabase.createGame("emma");
         GameData actual = gameDatabase.getGame(1);
-        GameData expected = new GameData(1, null, null, "name", actual.game());
+        GameData expected = new GameData(1, null, null, "emma", actual.game());
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void createGameTestNegative() throws DataAccessException {
@@ -292,9 +248,7 @@ public class DatabaseTests {
         gameDatabase.createGame("name");
 
         assertEquals(3, gameDatabase.listGames().size());
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //listGame
     @Test
@@ -312,9 +266,7 @@ public class DatabaseTests {
         expected.add(game3);
 
         assertEquals(expected.size(), actual.size());
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
 
     }
     @Test
@@ -323,9 +275,7 @@ public class DatabaseTests {
         ArrayList<GameData> expected = new ArrayList<>();
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     //addPlayer
     @Test
@@ -336,9 +286,7 @@ public class DatabaseTests {
         String playerName = gameDatabase.getGame(1).whiteUsername();
 
         assertEquals("emma", playerName);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
     @Test
     void addPlayerTestNegative() throws DataAccessException {
@@ -355,8 +303,6 @@ public class DatabaseTests {
         ArrayList<GameData> expected = new ArrayList<>();
 
         assertEquals(expected, actual);
-        userDatabase.clear();
-        authDatabase.clear();
-        gameDatabase.clear();
+        clearAll();
     }
 }

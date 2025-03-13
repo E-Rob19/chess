@@ -148,9 +148,9 @@ public class DatabaseTests {
     //getUser
     @Test
     void getUserTestPositive() throws DataAccessException {
-        UserData expected = new UserData("emma", "password", "email");
-        userDatabase.createUser(new UserData("emma", "password", "email"));
-        UserData actual = userDatabase.getUser("emma");
+        UserData expected = new UserData("leslie", "password", "email");
+        userDatabase.createUser(new UserData("leslie", "password", "email"));
+        UserData actual = userDatabase.getUser("leslie");
 
         assertTrue(BCrypt.checkpw(expected.password(), actual.password()));
         clearAll();

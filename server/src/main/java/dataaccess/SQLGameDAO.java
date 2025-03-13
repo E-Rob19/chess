@@ -42,7 +42,8 @@ public class SQLGameDAO implements GameDataAccess {
     @Override
     public int createGame(String gameName) throws DataAccessException {
         var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, chessGame) VALUES (?, ?, ?, ?)";
-        SQLAuthDAO.execute(statement, null, null, gameName, new ChessGame());
+        ChessGame newGame = new ChessGame();
+        SQLAuthDAO.execute(statement, null, null, gameName, new Gson().toJson(newGame));
         gameNum = gameNum + 1;
         return gameNum - 1;
     }

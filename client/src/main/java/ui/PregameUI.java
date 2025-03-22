@@ -23,17 +23,13 @@ public class PregameUI {
         Scanner scanner = new Scanner(System.in);
         while (!Objects.equals(command, "quit")) {
             System.out.printf("Type your numbers%n>>> ");
-            //try {
             parseInput(scanner.nextLine());
             switch (command) {
                 case "login" -> login(params);
                 case "register" -> register(params);
                 case "quit" -> {return;}
                 default -> help();
-            };
-            //} catch (DataFormatException ex) {
-            //    return ex.getMessage();
-            //}
+            }
         }
     }
 

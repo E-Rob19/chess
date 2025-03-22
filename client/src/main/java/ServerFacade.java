@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.*;
+import java.util.zip.DataFormatException;
 
 public class ServerFacade {
     private final String serverUrl;
@@ -10,21 +11,26 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataFormatException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
+//            writeBody(request, http);
+            if (request != null) {
+                http.addRequestProperty("Content-Type", "application/json");
+                String reqData = new Gson().toJson(request);
+                try (OutputStream reqBody = http.getOutputStream()) {
+                    reqBody.write(reqData.getBytes());
+                }
+            }
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
-        } catch (ResponseException ex) {
-            throw ex;
         } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
+            throw new DataFormatException(ex.getMessage());
         }
     }
 
@@ -39,16 +45,16 @@ public class ServerFacade {
         }
     }
 
-    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
+    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException{
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
             try (InputStream respErr = http.getErrorStream()) {
                 if (respErr != null) {
-                    throw ResponseException.fromJson(respErr);
+                    //throw ResponseException.fromJson(respErr);
                 }
             }
 
-            throw new ResponseException(status, "other failure: " + status);
+            //throw new ResponseException(status, "other failure: " + status);
         }
     }
 

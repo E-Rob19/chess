@@ -1,15 +1,18 @@
 package ui;
 
+import dataaccess.DataAccessException;
 import service.RegisterRequest;
 
+import Facade.ServerFacade;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
-public class PregameUI {
+public class PreLoginUI {
     private static String command;
     private static String[] params;
+    private static ServerFacade server = new ServerFacade("http://localhost:8080");
 
 
     private void parseInput(String input){
@@ -18,7 +21,7 @@ public class PregameUI {
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval(){
+    public void eval() throws DataFormatException, DataAccessException {
         Scanner scanner = new Scanner(System.in);
         while (!Objects.equals(command, "quit")) {
             System.out.printf(">>> ");
@@ -50,12 +53,13 @@ public class PregameUI {
         System.out.print("LOGIN\n");
     }
 
-    private void register(String[] params){
+    private void register(String[] params) throws DataFormatException, DataAccessException {
         if (params.length >= 1) {
             String username = params[0];
             String password = params[1];
             String email = params[2];
             RegisterRequest req = new RegisterRequest(username, password, email);
+            server.register(req);
             return;
         }
         System.out.print("wrong number of inputs\n");

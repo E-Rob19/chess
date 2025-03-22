@@ -1,4 +1,8 @@
+package Facade;
+
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
+import service.*;
 
 import java.io.*;
 import java.net.*;
@@ -11,21 +15,23 @@ public class ServerFacade {
         serverUrl = url;
     }
 
+    public void register(RegisterRequest req) throws DataAccessException, DataFormatException {
+        var path = "/user";
+        this.makeRequest("POST", path, req, RegisterResult.class);
+    }
+
+    public void login(LoginRequest req) throws DataAccessException, DataFormatException {
+        var path = "/session";
+        this.makeRequest("POST", path, req, RegisterResult.class);
+    }
+
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataFormatException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
-
-//            writeBody(request, http);
-            if (request != null) {
-                http.addRequestProperty("Content-Type", "application/json");
-                String reqData = new Gson().toJson(request);
-                try (OutputStream reqBody = http.getOutputStream()) {
-                    reqBody.write(reqData.getBytes());
-                }
-            }
+            writeBody(request, http);
             http.connect();
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
@@ -47,14 +53,8 @@ public class ServerFacade {
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException{
         var status = http.getResponseCode();
-        if (!isSuccessful(status)) {
-            try (InputStream respErr = http.getErrorStream()) {
-                if (respErr != null) {
-                    //throw ResponseException.fromJson(respErr);
-                }
-            }
-
-            //throw new ResponseException(status, "other failure: " + status);
+        if (status != 200) {
+            throw new IOException("failure: " + status);
         }
     }
 
@@ -71,8 +71,4 @@ public class ServerFacade {
         return response;
     }
 
-
-    private boolean isSuccessful(int status) {
-        return status / 100 == 2;
-    }
 }

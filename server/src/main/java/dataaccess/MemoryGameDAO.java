@@ -2,7 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
-import service.GameDataShort;
+import RequestsAndResponses.GameDataShort;
 
 import java.util.ArrayList;
 

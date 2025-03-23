@@ -1,7 +1,7 @@
 package ui;
 
 import dataaccess.DataAccessException;
-import service.RegisterRequest;
+import RequestsAndResponses.RegisterRequest;
 
 import Facade.ServerFacade;
 import java.util.Arrays;
@@ -23,8 +23,11 @@ public class PreLoginUI {
 
     public void eval() throws DataFormatException, DataAccessException {
         Scanner scanner = new Scanner(System.in);
+        System.out.print("Welcome to Chess!\n");
+        help();
         while (!Objects.equals(command, "quit")) {
-            System.out.printf(">>> ");
+            System.out.print(EscapeSequences.RESET_TEXT_COLOR);
+            System.out.print(">>> ");
             parseInput(scanner.nextLine());
             switch (command) {
                 case "login" -> login(params);
@@ -36,9 +39,10 @@ public class PreLoginUI {
     }
 
     private void help(){
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+        System.out.print("Available commands:\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         System.out.print(" - register <USERNAME> <PASSWORD> <EMAIL>\n");
-
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         System.out.print(" - login <USERNAME> <PASSWORD>\n");
 
@@ -60,9 +64,13 @@ public class PreLoginUI {
             String email = params[2];
             RegisterRequest req = new RegisterRequest(username, password, email);
             server.register(req);
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+            System.out.print("Successfully registered!\n");
             return;
         }
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
         System.out.print("wrong number of inputs\n");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         System.out.print("register with a username, password, and email\n");
     }
 

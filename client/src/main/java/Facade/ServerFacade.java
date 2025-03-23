@@ -2,7 +2,9 @@ package Facade;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import service.*;
+import RequestsAndResponses.LoginRequest;
+import RequestsAndResponses.RegisterRequest;
+import RequestsAndResponses.RegisterResult;
 
 import java.io.*;
 import java.net.*;

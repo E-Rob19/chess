@@ -1,8 +1,7 @@
 package dataaccess;
 
 import model.GameData;
-import model.UserData;
-import service.GameDataShort;
+import RequestsAndResponses.GameDataShort;
 
 import java.util.ArrayList;
 

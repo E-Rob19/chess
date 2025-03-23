@@ -1,14 +1,11 @@
 package service;
 
+import RequestsAndResponses.*;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.SQLException;
-
-import static java.sql.Types.NULL;
 
 public class Service {
 

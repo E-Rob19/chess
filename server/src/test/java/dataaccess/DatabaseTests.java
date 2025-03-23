@@ -3,22 +3,12 @@ package dataaccess;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import dataaccess.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import passoff.model.TestCreateRequest;
-import passoff.model.TestUser;
-import passoff.server.TestServerFacade;
-import server.Server;
-import service.RegisterRequest;
-import service.RegisterResult;
-import service.Service;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -17,7 +17,7 @@ public class PreLoginUI {
     public static ServerFacade server = new ServerFacade("http://localhost:8080");
 
 
-    public void parseInput(String input){
+    public static void parseInput(String input){
         var tokens = input.toLowerCase().split(" ");
         command = (tokens.length > 0) ? tokens[0] : "help";
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -62,8 +62,10 @@ public class PreLoginUI {
             LoginRequest req = new LoginRequest(username, password);
             RegisterResult res = server.login(req);
             if(res != null) {
+                String authToken = res.authToken();
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successful login!\n");
+                new PostLoginUI().eval(authToken, server);
                 return;
             }
         }

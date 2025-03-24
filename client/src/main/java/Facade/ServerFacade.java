@@ -9,6 +9,7 @@ import java.util.zip.DataFormatException;
 
 public class ServerFacade {
     private final String serverUrl;
+    private String authToken;
 
     public ServerFacade(String url) {
         serverUrl = url;
@@ -16,47 +17,54 @@ public class ServerFacade {
 
     public RegisterResult register(RegisterRequest req) throws DataFormatException {
         var path = "/user";
-        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class, null);
         return res;
     }
 
     public RegisterResult login(LoginRequest req) throws DataFormatException {
         var path = "/session";
-        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class, null);
+        if (res != null) {
+            authToken = res.authToken();
+        }
         return res;
     }
 
     public void clear() throws DataFormatException {
         var path = "/db";
-        RegisterResult res = this.makeRequest("DELETE", path, null, null);
+        RegisterResult res = this.makeRequest("DELETE", path, null, null, authToken);
     }
-    public void logout() throws DataFormatException {
+    public String logout(LogoutRequest req) throws DataFormatException {
         var path = "/session";
-        RegisterResult res = this.makeRequest("DELETE", path, null, null);
+        String res = this.makeRequest("DELETE", path, req, null, authToken);
+        return res;
     }
 
     public CreateGameResponse createGame(CreateGameRequest req) throws DataFormatException {
-        var path = "/session";
-        CreateGameResponse res = this.makeRequest("POST", path, req, CreateGameResponse.class);
+        var path = "/game";
+        CreateGameResponse res = this.makeRequest("POST", path, req, CreateGameResponse.class, authToken);
         return res;
     }
 
-    public boolean joinGame(JoinRequest req) throws DataFormatException {
-        var path = "/session";
-        boolean res = this.makeRequest("POST", path, req, String.class) != null;
+    public String joinGame(JoinRequest req) throws DataFormatException {
+        var path = "/game";
+        String res = this.makeRequest("PUT", path, req, String.class, authToken);
         return res;
     }
 
-    public RegisterResult listGames(LoginRequest req) throws DataFormatException {
-        var path = "/session";
-        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+    public ListResponse listGames(LogoutRequest req) throws DataFormatException {
+        var path = "/game";
+        ListResponse res = this.makeRequest("GET", path, req, ListResponse.class, authToken);
         return res;
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataFormatException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws DataFormatException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            if(authToken != null){
+                http.addRequestProperty("Authorization", authToken);
+            }
             http.setRequestMethod(method);
             http.setDoOutput(true);
             writeBody(request, http);

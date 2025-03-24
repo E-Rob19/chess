@@ -1,9 +1,11 @@
 package ui;
 
-import dataaccess.DataAccessException;
+import RequestsAndResponses.LoginRequest;
 import RequestsAndResponses.RegisterRequest;
 
 import Facade.ServerFacade;
+import RequestsAndResponses.RegisterResult;
+
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
@@ -21,7 +23,7 @@ public class PreLoginUI {
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval() throws DataFormatException, DataAccessException {
+    public void eval() throws DataFormatException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -53,23 +55,44 @@ public class PreLoginUI {
         System.out.print(" - quit\n");
     }
 
-    private void login(String[] params){
-        System.out.print("LOGIN\n");
+    private void login(String[] params) throws DataFormatException {
+        if (params.length == 2) {
+            String username = params[0];
+            String password = params[1];
+            LoginRequest req = new LoginRequest(username, password);
+            RegisterResult res = server.login(req);
+            if(res != null) {
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+                System.out.print("Successful login\n");
+                return;
+            }
+        }
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+        System.out.print("unable to login\n");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+        System.out.print("login with an existing username and password, or register new user\n");
     }
 
-    private void register(String[] params) throws DataFormatException, DataAccessException {
-        if (params.length >= 1) {
+    private void register(String[] params) throws DataFormatException {
+        if (params.length == 3) {
             String username = params[0];
             String password = params[1];
             String email = params[2];
             RegisterRequest req = new RegisterRequest(username, password, email);
-            server.register(req);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
-            System.out.print("Successfully registered!\n");
-            return;
+            RegisterResult res = server.register(req);
+            if(res != null) {
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+                System.out.print("Successfully registered!\n");
+                return;
+            } else {
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("unable to register\n");
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+                System.out.print("register with an different username\n");
+            }
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-        System.out.print("wrong number of inputs\n");
+        System.out.print("unable to register\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         System.out.print("register with a username, password, and email\n");
     }

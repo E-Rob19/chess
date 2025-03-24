@@ -1,7 +1,6 @@
 package Facade;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
 import RequestsAndResponses.LoginRequest;
 import RequestsAndResponses.RegisterRequest;
 import RequestsAndResponses.RegisterResult;
@@ -17,14 +16,16 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public void register(RegisterRequest req) throws DataAccessException, DataFormatException {
+    public RegisterResult register(RegisterRequest req) throws DataFormatException {
         var path = "/user";
-        this.makeRequest("POST", path, req, RegisterResult.class);
+        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+        return res;
     }
 
-    public void login(LoginRequest req) throws DataAccessException, DataFormatException {
+    public RegisterResult login(LoginRequest req) throws DataFormatException {
         var path = "/session";
-        this.makeRequest("POST", path, req, RegisterResult.class);
+        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+        return res;
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataFormatException {
@@ -35,7 +36,9 @@ public class ServerFacade {
             http.setDoOutput(true);
             writeBody(request, http);
             http.connect();
-            throwIfNotSuccessful(http);
+            if(!throwIfNotSuccessful(http)){
+                return null;
+            }
             return readBody(http, responseClass);
         } catch (Exception ex) {
             throw new DataFormatException(ex.getMessage());
@@ -53,11 +56,18 @@ public class ServerFacade {
         }
     }
 
-    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException{
+    private boolean throwIfNotSuccessful(HttpURLConnection http) throws IOException{
         var status = http.getResponseCode();
+        switch (status){
+            case 401, 403 -> {
+                System.out.print("unable to complete request\n");
+                return false;
+            }
+        }
         if (status != 200) {
             throw new IOException("failure: " + status);
         }
+        return true;
     }
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {

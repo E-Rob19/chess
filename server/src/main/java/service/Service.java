@@ -80,13 +80,13 @@ public class Service {
         if (game == null){
             return "no game";
         }
-        if(joinRequest.playerColor().equals("WHITE")){
+        if(joinRequest.playerColor().equalsIgnoreCase("WHITE")){
             if(game.whiteUsername() == null || game.whiteUsername().equals(auth.username())){
                 gameDatabase.addPlayer(game.gameID(), auth.username(), joinRequest.playerColor());
             } else {
                 return "taken";
             }
-        } else if (joinRequest.playerColor().equals("BLACK")) {
+        } else if (joinRequest.playerColor().equalsIgnoreCase("BLACK")) {
             if(game.blackUsername() == null || game.blackUsername().equals(auth.username())){
                 gameDatabase.addPlayer(game.gameID(), auth.username(), joinRequest.playerColor());
             } else {

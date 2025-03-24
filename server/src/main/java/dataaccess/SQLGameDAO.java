@@ -93,9 +93,9 @@ public class SQLGameDAO implements GameDataAccess {
     @Override
     public void addPlayer(int gameID, String username, String playerColor) throws DataAccessException {
         String statement = "";
-        if (playerColor.equals("WHITE")) {
+        if (playerColor.equalsIgnoreCase("WHITE")) {
             statement = "UPDATE games SET whiteUsername = ? WHERE gameID = ?;";
-        } else if (playerColor.equals("BLACK")) {
+        } else if (playerColor.equalsIgnoreCase("BLACK")) {
             statement = "UPDATE games SET blackUsername = ? WHERE gameID = ?;";
         }
         SQLAuthDAO.execute(statement, username, gameID);

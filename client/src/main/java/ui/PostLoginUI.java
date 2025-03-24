@@ -72,11 +72,11 @@ public class PostLoginUI {
             String color = params[1];
             JoinRequest req = new JoinRequest(color, Integer.parseInt(id), authToken);
             String res = server.joinGame(req);
-            if(res != null) {
+            //if(res != null) {
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successful join?\n");
                 return;
-            }
+            //}
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
         System.out.print("unable to join\n");

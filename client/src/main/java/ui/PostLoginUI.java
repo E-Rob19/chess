@@ -14,6 +14,7 @@ public class PostLoginUI {
     private static String command;
     private static String[] params;
     private String authToken;
+    private String username;
     public ServerFacade server;
     private ArrayList<GameDataShort> gameList;
     private boolean check = true;
@@ -24,13 +25,16 @@ public class PostLoginUI {
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval(String authToken, ServerFacade server) throws DataFormatException {
+    public void eval(String authToken, ServerFacade server, String username) throws DataFormatException {
         check = true;
         this.authToken = authToken;
         this.server = server;
+        this.username = username;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
+        String[] lis = {};
+        listGames(lis);
         while (check) {
             System.out.print(EscapeSequences.RESET_TEXT_COLOR);
             System.out.print("[LOGGED-IN] >>> ");
@@ -68,15 +72,57 @@ public class PostLoginUI {
 
     private void play(String[] params) throws DataFormatException {
         if (params.length == 2) {
-            String id = params[0];
-            String color = params[1];
-            JoinRequest req = new JoinRequest(color, Integer.parseInt(id), authToken);
-            String res = server.joinGame(req);
-            //if(res != null) {
-                System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
-                System.out.print("Successful join?\n");
+            int id = 0;
+            try {
+                id = Integer.parseInt(params[0]);
+            } catch(Exception ex) {
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("not a valid game number\n");
                 return;
-            //}
+            }
+            String color = params[1];
+            if(!color.equalsIgnoreCase("white") && !color.equalsIgnoreCase("black")){
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("not a valid color\n");
+                return;
+            }
+            if(!(id > 0 && id <= gameList.size())){
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("not a valid game number\n");
+                return;
+            }
+            GameDataShort game = gameList.get(id-1);
+            if(color.equalsIgnoreCase("white")){
+                if(game.whiteUsername() != null) {
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                    System.out.print("game already has a white player\n");
+                    return;
+                }
+                if(Objects.equals(game.blackUsername(), username)){
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                    System.out.print("cannot play as both players\n");
+                    return;
+                }
+            }
+            if(color.equalsIgnoreCase("black")){
+                if(game.blackUsername() != null) {
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                    System.out.print("game already has a black player\n");
+                    return;
+                }
+                if(Objects.equals(game.whiteUsername(), username)){
+                    System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                    System.out.print("cannot play as both players\n");
+                    return;
+                }
+            }
+            JoinRequest req = new JoinRequest(color, id, authToken);
+            String res = server.joinGame(req);
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+            System.out.print("Successful join!\n");
+            String [] lis = {};
+            listGames(lis);
+            return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
         System.out.print("unable to join\n");
@@ -120,7 +166,27 @@ public class PostLoginUI {
     }
 
     private void observe(String[] params){
-
+        if(params.length == 1){
+            int id = 0;
+            try {
+                id = Integer.parseInt(params[0]);
+            } catch(Exception ex) {
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("not a number\n");
+                return;
+            }
+            if(!(id > 0 && id <= gameList.size())){
+                System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                System.out.print("not a valid game number\n");
+                return;
+            }
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+            System.out.print("observe game " + id + "\n");
+            //add print chess board things here
+            return;
+        }
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+        System.out.print("observe only takes a game number\n");
     }
 
     private void logout(String[] params) throws DataFormatException {

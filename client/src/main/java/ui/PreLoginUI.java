@@ -65,7 +65,7 @@ public class PreLoginUI {
                 String authToken = res.authToken();
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successful login!\n");
-                new PostLoginUI().eval(authToken, server);
+                new PostLoginUI().eval(authToken, server, username);
                 return;
             }
         }

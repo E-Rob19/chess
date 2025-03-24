@@ -14,10 +14,10 @@ import java.util.zip.DataFormatException;
 public class PreLoginUI {
     private static String command;
     private static String[] params;
-    private static ServerFacade server = new ServerFacade("http://localhost:8080");
+    public static ServerFacade server = new ServerFacade("http://localhost:8080");
 
 
-    private void parseInput(String input){
+    public void parseInput(String input){
         var tokens = input.toLowerCase().split(" ");
         command = (tokens.length > 0) ? tokens[0] : "help";
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -63,7 +63,7 @@ public class PreLoginUI {
             RegisterResult res = server.login(req);
             if(res != null) {
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
-                System.out.print("Successful login\n");
+                System.out.print("Successful login!\n");
                 return;
             }
         }
@@ -83,12 +83,14 @@ public class PreLoginUI {
             if(res != null) {
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successfully registered!\n");
+                login(Arrays.copyOf(params, params.length-1));
                 return;
             } else {
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                 System.out.print("unable to register\n");
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
                 System.out.print("register with an different username\n");
+                return;
             }
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);

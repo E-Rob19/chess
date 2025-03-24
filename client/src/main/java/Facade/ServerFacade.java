@@ -28,6 +28,12 @@ public class ServerFacade {
         return res;
     }
 
+    public RegisterResult clear(LoginRequest req) throws DataFormatException {
+        var path = "/session";
+        RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
+        return res;
+    }
+
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataFormatException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();

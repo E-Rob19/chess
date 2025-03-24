@@ -1,9 +1,7 @@
 package Facade;
 
+import RequestsAndResponses.*;
 import com.google.gson.Gson;
-import RequestsAndResponses.LoginRequest;
-import RequestsAndResponses.RegisterRequest;
-import RequestsAndResponses.RegisterResult;
 
 import java.io.*;
 import java.net.*;
@@ -28,7 +26,28 @@ public class ServerFacade {
         return res;
     }
 
-    public RegisterResult clear(LoginRequest req) throws DataFormatException {
+    public void clear() throws DataFormatException {
+        var path = "/db";
+        RegisterResult res = this.makeRequest("DELETE", path, null, null);
+    }
+    public void logout() throws DataFormatException {
+        var path = "/session";
+        RegisterResult res = this.makeRequest("DELETE", path, null, null);
+    }
+
+    public CreateGameResponse createGame(CreateGameRequest req) throws DataFormatException {
+        var path = "/session";
+        CreateGameResponse res = this.makeRequest("POST", path, req, CreateGameResponse.class);
+        return res;
+    }
+
+    public boolean joinGame(JoinRequest req) throws DataFormatException {
+        var path = "/session";
+        boolean res = this.makeRequest("POST", path, req, String.class) != null;
+        return res;
+    }
+
+    public RegisterResult listGames(LoginRequest req) throws DataFormatException {
         var path = "/session";
         RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class);
         return res;

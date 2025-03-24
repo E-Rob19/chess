@@ -48,13 +48,13 @@ public class ServerFacade {
 
     public String joinGame(JoinRequest req) throws DataFormatException {
         var path = "/game";
-        String res = this.makeRequest("PUT", path, req, String.class, authToken);
+        String res = this.makeRequest("PUT", path, req, null, authToken);
         return res;
     }
 
     public ListResponse listGames(LogoutRequest req) throws DataFormatException {
         var path = "/game";
-        ListResponse res = this.makeRequest("GET", path, req, ListResponse.class, authToken);
+        ListResponse res = this.makeRequest("GET", path, null, ListResponse.class, authToken);
         return res;
     }
 
@@ -94,6 +94,10 @@ public class ServerFacade {
         switch (status){
             case 401, 403 -> {
                 System.out.print("unable to complete request\n");
+                return false;
+            }
+            case 400 -> {
+                System.out.print("unable to complete request : 400\n");
                 return false;
             }
         }

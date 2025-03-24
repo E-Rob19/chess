@@ -1,10 +1,7 @@
 package ui;
 
 import Facade.ServerFacade;
-import RequestsAndResponses.JoinRequest;
-import RequestsAndResponses.LoginRequest;
-import RequestsAndResponses.LogoutRequest;
-import RequestsAndResponses.RegisterResult;
+import RequestsAndResponses.*;
 import chess.ChessGame;
 
 import java.util.ArrayList;
@@ -18,7 +15,7 @@ public class PostLoginUI {
     private static String[] params;
     private String authToken;
     public ServerFacade server;
-    private ArrayList<ChessGame> gameList;
+    private ArrayList<GameDataShort> gameList;
     private boolean check = true;
 
     public static void parseInput(String input){
@@ -87,12 +84,39 @@ public class PostLoginUI {
         System.out.print("join with an id on the list of games and a color\n");
     }
 
-    private void create(String[] params){
-
+    private void create(String[] params) throws DataFormatException {
+        if(params.length != 1){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("game name can only be one word\n");
+        }
+        CreateGameRequest req = new CreateGameRequest(authToken, params[0]);
+        CreateGameResponse res = server.createGame(req);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+        System.out.print("Game Created!\n");
+        String[] lis = {};
+        listGames(lis);
     }
 
     private void listGames(String[] params) throws DataFormatException {
-        server.clear();
+        if(params.length != 0){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("list does not take parameters\n");
+        }
+        LogoutRequest req = new LogoutRequest(authToken);
+        ListResponse res = server.listGames(req);
+        if(res == null){
+            System.out.print("cannot list games\n");
+            return;
+        }
+        gameList = res.games();
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+        System.out.print("Games:\n");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+        for (int i = 0; i < gameList.size(); i++){
+            System.out.print((i+1) + " : " + gameList.get(i).gameName());
+            System.out.print(" W:" + gameList.get(i).whiteUsername());
+            System.out.print(" B:" + gameList.get(i).blackUsername() + "\n");
+        }
     }
 
     private void observe(String[] params){
@@ -100,9 +124,14 @@ public class PostLoginUI {
     }
 
     private void logout(String[] params) throws DataFormatException {
+        if(params.length != 0){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("logout does not take parameters\n");
+        }
         LogoutRequest req = new LogoutRequest(authToken);
         String res = server.logout(req);
-        //System.out.print(res + "\n");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
+        System.out.print("Logged out\n");
         check = false;
 
     }

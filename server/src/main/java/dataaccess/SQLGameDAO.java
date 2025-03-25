@@ -69,26 +69,6 @@ public class SQLGameDAO implements GameDataAccess {
     }
 
 
-//    public break ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException {
-//        var result = new ArrayList<GameDataShort>();
-//        try (var conn = DatabaseManager.getConnection()) {
-//            var statement = "SELECT * FROM games";
-//            try (var ps = conn.prepareStatement(statement)) {
-//                try (var rs = ps.executeQuery()) {
-//                    while (rs.next()) {
-//                        int id = rs.getInt("gameID");
-//                        String whiteUsername = rs.getString("whiteUsername");
-//                        String blackUsername = rs.getString("blackUsername");
-//                        String gameName = rs.getString("gameName");
-//                        result.add(new GameDataShort(id, whiteUsername, blackUsername, gameName));
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
-//        }
-//        return result;
-//    }
 
     @Override
     public void addPlayer(int gameID, String username, String playerColor) throws DataAccessException {

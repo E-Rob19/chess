@@ -29,13 +29,6 @@ public class MemoryGameDAO implements GameDataAccess{
     }
 
 
-//    public break ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException {
-//        ArrayList<GameDataShort> lis = new ArrayList<>();
-//        for(GameData game : GAMES){
-//          lis.add(new GameDataShort(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
-//        }
-//        return lis;
-//    }
 
     @Override
     public ArrayList<GameData> listGames() throws DataAccessException{

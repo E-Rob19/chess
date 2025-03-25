@@ -21,9 +21,9 @@ public class PostLoginUI {
     private PrintChessBoard printFunc = new PrintChessBoard();
 
     public static void parseInput(String input){
-        var tokens = input.toLowerCase().split(" ");
-        command = (tokens.length > 0) ? tokens[0] : "help";
-        params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        var token = input.toLowerCase().split(" ");
+        command = (token.length > 0) ? token[0] : "help";
+        params = Arrays.copyOfRange(token, 1, token.length);
     }
 
     public void eval(String authToken, ServerFacade server, String username) throws DataFormatException {

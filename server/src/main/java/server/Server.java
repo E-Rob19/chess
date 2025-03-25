@@ -1,5 +1,6 @@
 package server;
 
+import model.GameData;
 import requests.*;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
@@ -125,7 +126,8 @@ public class Server {
         ArrayList<GameDataShort> lis = new ArrayList<>();
         ListResponseShort newRes = new ListResponseShort(lis);
         for (int i = 0; i < lRes.games().size(); i++){
-            newRes.games().add(new GameDataShort(lRes.games().get(i).gameID(), lRes.games().get(i).whiteUsername(), lRes.games().get(i).blackUsername(), lRes.games().get(i).gameName()));
+            GameData game = lRes.games().get(i);
+            newRes.games().add(new GameDataShort(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
         }
 
         return serializer.toJson(newRes);

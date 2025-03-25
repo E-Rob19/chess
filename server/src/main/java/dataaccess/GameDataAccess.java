@@ -12,7 +12,7 @@ public interface GameDataAccess {
 
     ArrayList<GameData> listGames() throws DataAccessException;
 
-    ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException;
+    //ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException
 
     void addPlayer(int gameID, String username, String playerColor) throws DataAccessException;
 

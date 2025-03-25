@@ -57,7 +57,7 @@ public class Service {
             return null;
         }
 
-        return new ListResponse(gameDatabase.listGamesForResponse());
+        return new ListResponse(gameDatabase.listGames());
     }
 
     public CreateGameResponse createGame(CreateGameRequest createGameRequest) throws DataAccessException {

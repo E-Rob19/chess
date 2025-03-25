@@ -3,6 +3,7 @@ package ui;
 import Facade.ServerFacade;
 import RequestsAndResponses.*;
 import chess.ChessGame;
+import model.GameData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +17,9 @@ public class PostLoginUI {
     private String authToken;
     private String username;
     public ServerFacade server;
-    private ArrayList<GameDataShort> gameList;
+    private ArrayList<GameData> gameList;
     private boolean check = true;
+    private PrintChessBoard printFunc = new PrintChessBoard();
 
     public static void parseInput(String input){
         var tokens = input.toLowerCase().split(" ");
@@ -91,7 +93,7 @@ public class PostLoginUI {
                 System.out.print("not a valid game number\n");
                 return;
             }
-            GameDataShort game = gameList.get(id-1);
+            GameData game = gameList.get(id-1);
             if(color.equalsIgnoreCase("white")){
                 if(game.whiteUsername() != null) {
                     System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
@@ -122,6 +124,11 @@ public class PostLoginUI {
             System.out.print("Successful join!\n");
             String [] lis = {};
             listGames(lis);
+            if(color.equalsIgnoreCase("white")){
+                printFunc.print(null);
+            } else {
+                printFunc.printBack(null);
+            }
             return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
@@ -183,6 +190,7 @@ public class PostLoginUI {
             System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
             System.out.print("observe game " + id + "\n");
             //add print chess board things here
+            printFunc.print(null);
             return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);

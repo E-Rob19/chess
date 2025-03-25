@@ -18,6 +18,9 @@ public class ServerFacade {
     public RegisterResult register(RegisterRequest req) throws DataFormatException {
         var path = "/user";
         RegisterResult res = this.makeRequest("POST", path, req, RegisterResult.class, null);
+        if (res != null) {
+            authToken = res.authToken();
+        }
         return res;
     }
 

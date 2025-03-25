@@ -7,6 +7,9 @@ import service.Service;
 import spark.*;
 import model.ErrorMessage;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Server {
 
     public int run(int desiredPort) {
@@ -115,12 +118,18 @@ public class Server {
         }
 
         ListResponse lRes = service.listGames(rReq);
+
         if(lRes == null){
             res.status(401);
             return serializer.toJson(new ErrorMessage("Error: unauthorized"));
         }
+        ArrayList<GameDataShort> lis = new ArrayList<>();
+        ListResponseShort newRes = new ListResponseShort(lis);
+        for (int i = 0; i < lRes.games().size(); i++){
+            newRes.games().add(new GameDataShort(lRes.games().get(i).gameID(), lRes.games().get(i).whiteUsername(), lRes.games().get(i).blackUsername(), lRes.games().get(i).gameName()));
+        }
 
-        return serializer.toJson(lRes);
+        return serializer.toJson(newRes);
     }
 
     private Object createGame(Request req, Response res) throws DataAccessException{

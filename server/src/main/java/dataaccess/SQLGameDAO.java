@@ -68,7 +68,7 @@ public class SQLGameDAO implements GameDataAccess {
         return result;
     }
 
-    @Override
+
     public ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException {
         var result = new ArrayList<GameDataShort>();
         try (var conn = DatabaseManager.getConnection()) {

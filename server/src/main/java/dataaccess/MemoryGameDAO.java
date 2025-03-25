@@ -28,7 +28,7 @@ public class MemoryGameDAO implements GameDataAccess{
         return gameNum-1;
     }
 
-    @Override
+
     public ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException {
         ArrayList<GameDataShort> lis = new ArrayList<>();
         for(GameData game : GAMES){

@@ -1,8 +1,7 @@
 package ui;
 
-import Facade.ServerFacade;
-import RequestsAndResponses.*;
-import chess.ChessGame;
+import facade.ServerFacade;
+import requests.*;
 import model.GameData;
 
 import java.util.ArrayList;

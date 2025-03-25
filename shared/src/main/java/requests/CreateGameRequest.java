@@ -1,4 +1,4 @@
-package RequestsAndResponses;
+package requests;
 
 public record CreateGameRequest(String authToken, String gameName) {
 }

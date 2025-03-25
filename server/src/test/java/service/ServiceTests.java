@@ -1,6 +1,6 @@
 package service;
 
-import RequestsAndResponses.*;
+import requests.*;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.AuthData;

@@ -1,4 +1,4 @@
-package RequestsAndResponses;
+package requests;
 
 //import GameDataShort;
 

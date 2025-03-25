@@ -1,6 +1,6 @@
-package Facade;
+package facade;
 
-import RequestsAndResponses.*;
+import requests.*;
 import com.google.gson.Gson;
 
 import java.io.*;

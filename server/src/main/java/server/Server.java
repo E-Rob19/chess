@@ -1,13 +1,12 @@
 package server;
 
-import RequestsAndResponses.*;
+import requests.*;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import service.Service;
 import spark.*;
 import model.ErrorMessage;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Server {

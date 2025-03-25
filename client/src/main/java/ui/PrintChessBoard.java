@@ -15,7 +15,7 @@ public class PrintChessBoard {
         } else {
             board = game.getBoard();
         }
-        ChessPiece piece;
+        ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"h", "g", "f", "e", "d", "c", "b", "a"};
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
@@ -30,22 +30,7 @@ public class PrintChessBoard {
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
         for(int i = 1; i < 9; i++){
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(" "+i+" ");
-            for(int j = 1; j < 9; j++){
-                if((i+j)%2==0){
-                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
-                } else {
-                    System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
-                }
-                piece = board.getPiece(new ChessPosition(i,j));
-                printPiece(piece);
-            }
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" "+i+" ");
-            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-            System.out.print("\n");
+            printHelper(i, piece);
         }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
@@ -68,7 +53,7 @@ public class PrintChessBoard {
         } else {
             board = game.getBoard();
         }
-        ChessPiece piece;
+        ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"a", "b", "c", "d", "e", "f", "g", "h"};
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
@@ -83,22 +68,7 @@ public class PrintChessBoard {
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
         for(int i = 8; i > 0; i--){
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(" "+i+" ");
-            for(int j = 1; j < 9; j++){
-                if((i+j)%2==0){
-                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
-                } else {
-                    System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
-                }
-                piece = board.getPiece(new ChessPosition(i,j));
-                printPiece(piece);
-            }
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" "+i+" ");
-            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-            System.out.print("\n");
+            printHelper(i, piece);
         }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
@@ -110,6 +80,25 @@ public class PrintChessBoard {
             }
         }
         System.out.print(EscapeSequences.EMPTY);
+        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        System.out.print("\n");
+    }
+
+    private void printHelper(int i, ChessPiece piece){
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(" "+i+" ");
+        for(int j = 1; j < 9; j++){
+            if((i+j)%2==0){
+                System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+            } else {
+                System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+            }
+            piece = board.getPiece(new ChessPosition(i,j));
+            printPiece(piece);
+        }
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(" "+i+" ");
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
     }

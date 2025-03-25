@@ -1,10 +1,10 @@
 package ui;
 
-import RequestsAndResponses.LoginRequest;
-import RequestsAndResponses.RegisterRequest;
+import requests.LoginRequest;
+import requests.RegisterRequest;
 
-import Facade.ServerFacade;
-import RequestsAndResponses.RegisterResult;
+import facade.ServerFacade;
+import requests.RegisterResult;
 
 import java.util.Arrays;
 import java.util.Objects;

@@ -1,16 +1,13 @@
 package client;
 
-import Facade.ServerFacade;
-import RequestsAndResponses.*;
-import chess.ChessGame;
+import facade.ServerFacade;
+import requests.*;
 import dataaccess.DataAccessException;
-import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import service.Service;
-import ui.Client;
 
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;

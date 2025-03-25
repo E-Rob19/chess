@@ -20,6 +20,7 @@ public class PreLoginUI {
     public static void parseInput(String input){
         var tokens = input.toLowerCase().split(" ");
         command = (tokens.length > 0) ? tokens[0] : "help";
+        ServerFacade test = server;
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 

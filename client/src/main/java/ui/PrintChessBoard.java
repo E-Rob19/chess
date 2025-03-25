@@ -32,17 +32,15 @@ public class PrintChessBoard {
         for(int i = 1; i < 9; i++){
             printHelper(i, piece);
         }
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(EscapeSequences.EMPTY);
-        for (int i = 0; i < 8; i++){
-            System.out.print(" " + letters[i] + " ");
-            if(i%2==1){
+        for (int j = 0; j < 8; j++){
+            System.out.print(" " + letters[j] + " ");
+            if(j%2==1){
                 System.out.print(" ");
             }
         }
-        System.out.print(EscapeSequences.EMPTY);
-        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        System.out.print(EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
     }
 

@@ -10,13 +10,13 @@ import org.eclipse.jetty.websocket.api.Session;
 public class ConnectionManager {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
-    public void add(String visitorName, Session session) {
-        var connection = new Connection(visitorName, session);
-        connections.put(visitorName, connection);
+    public void add(String username, Session session) {
+        var connection = new Connection(username, session);
+        connections.put(username, connection);
     }
 
-    public void remove(String visitorName) {
-        connections.remove(visitorName);
+    public void remove(String username) {
+        connections.remove(username);
     }
 
     public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {

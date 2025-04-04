@@ -5,6 +5,9 @@ import requests.RegisterRequest;
 
 import facade.ServerFacade;
 import requests.RegisterResult;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
+import websocket.messages.ServerMessage;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -15,6 +18,12 @@ public class PreLoginUI {
     private static String command;
     private static String[] params;
     public static ServerFacade server = new ServerFacade("http://localhost:8080");
+    private final NotificationHandler notificationHandler;
+    private WebSocketFacade ws;
+
+    public PreLoginUI(NotificationHandler notificationHandler) {
+        this.notificationHandler = notificationHandler;
+    }
 
 
     public static void parseInput(String input){
@@ -100,6 +109,11 @@ public class PreLoginUI {
         System.out.print("unable to register\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         System.out.print("register with a username, password, and email\n");
+    }
+
+    public void notify(ServerMessage notification) {
+        System.out.println(notification.message());
+        //printPrompt();
     }
 
 }

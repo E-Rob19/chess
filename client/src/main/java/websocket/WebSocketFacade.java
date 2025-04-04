@@ -13,7 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.zip.DataFormatException;
 
-public class WebSocketFacade {
+public class WebSocketFacade extends Endpoint{
 
     Session session;
     NotificationHandler notificationHandler;
@@ -48,6 +48,11 @@ public class WebSocketFacade {
         } catch (IOException ex) {
             throw new DataAccessException(ex.getMessage());
         }
+    }
+
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+
     }
 
 //    public void leavePetShop(String visitorName) throws ResponseException {

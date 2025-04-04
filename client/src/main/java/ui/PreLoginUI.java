@@ -15,16 +15,16 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
-public class PreLoginUI {
+public class PreLoginUI implements NotificationHandler{
     private static String command;
     private static String[] params;
     public static ServerFacade server = new ServerFacade("http://localhost:8080");
     private final NotificationHandler notificationHandler;
     private WebSocketFacade ws;
 
-    public PreLoginUI(NotificationHandler notificationHandler) throws DataAccessException {
-        this.notificationHandler = notificationHandler;
-        ws = new WebSocketFacade("http://localhost:8080", notificationHandler);
+    public PreLoginUI() throws DataAccessException {
+        this.notificationHandler = this;
+        ws = new WebSocketFacade("http://localhost:8080", this);
     }
 
 
@@ -35,7 +35,7 @@ public class PreLoginUI {
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval() throws DataFormatException {
+    public void eval() throws DataFormatException, DataAccessException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -67,7 +67,7 @@ public class PreLoginUI {
         System.out.print(" - quit\n");
     }
 
-    private void login(String[] params) throws DataFormatException {
+    private void login(String[] params) throws DataFormatException, DataAccessException {
         if (params.length == 2) {
             String username = params[0];
             String password = params[1];
@@ -87,7 +87,7 @@ public class PreLoginUI {
         System.out.print("login with an existing username and password, or register new user\n");
     }
 
-    private void register(String[] params) throws DataFormatException {
+    private void register(String[] params) throws DataFormatException, DataAccessException {
         if (params.length == 3) {
             String username = params[0];
             String password = params[1];

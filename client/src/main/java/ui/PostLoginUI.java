@@ -1,5 +1,6 @@
 package ui;
 
+import dataaccess.DataAccessException;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
@@ -17,6 +18,7 @@ public class PostLoginUI {
     private String authToken;
     private String username;
     public ServerFacade server;
+    public WebSocketFacade ws;
     private ArrayList<GameData> gameList;
     private boolean check = true;
     private PrintChessBoard printFunc = new PrintChessBoard();
@@ -27,11 +29,12 @@ public class PostLoginUI {
         params = Arrays.copyOfRange(token, 1, token.length);
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException {
+    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, DataAccessException {
         check = true;
         this.authToken = authToken;
         this.server = server;
         this.username = username;
+        this.ws = ws;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -172,7 +175,7 @@ public class PostLoginUI {
         }
     }
 
-    private void observe(String[] params){
+    private void observe(String[] params) throws DataFormatException, DataAccessException {
         if(params.length == 1){
             int id = 0;
             try {
@@ -190,7 +193,9 @@ public class PostLoginUI {
             System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
             System.out.print("observe game " + id + "\n");
             //add print chess board things here
-            printFunc.print(null);
+            //printFunc.print(null);
+            ws.connect(authToken, id);
+            new GameplayUI().eval(authToken, server, username, ws);
             return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);

@@ -40,13 +40,34 @@ public class GameplayUI {
             System.out.print("[LOGGED-IN] >>> ");
             parseInput(scanner.nextLine());
             switch (command) {
-                case "redraw" -> create(params);
-                case "leave" -> listGames(params);
-                case "move" -> play(params);
-                case "resign" -> observe(params);
-                case "highlight" -> logout(params);
+                case "redraw" -> redraw(params);
+                case "leave" -> leave(params);
+                case "move" -> move(params);
+                case "resign" -> resign(params);
+                case "highlight" -> highlight(params);
                 default -> help();
             }
         }
+
+        private void help(){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+            System.out.print("Available commands:\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - redraw <NAME>\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - leave\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - move <ID> [WHITE/BLACK]\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - resign <ID>\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - lighlight\n");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            System.out.print(" - help\n");
+
+            //System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
+            //System.out.print(" - quit\n");
+        }
+
     }
 }

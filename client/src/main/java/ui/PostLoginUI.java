@@ -4,7 +4,9 @@ import dataaccess.DataAccessException;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
+import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +14,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
-public class PostLoginUI {
+public class PostLoginUI implements NotificationHandler {
     private static String command;
     private static String[] params;
     private String authToken;
@@ -213,5 +215,11 @@ public class PostLoginUI {
         System.out.print("Logged out\n");
         check = false;
 
+    }
+
+    public void notify(ServerMessage notification) {
+        System.out.println(notification.getMessage());
+        System.out.println("testing notify 2\n");
+        //printPrompt();
     }
 }

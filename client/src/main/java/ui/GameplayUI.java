@@ -2,14 +2,16 @@ package ui;
 
 import facade.ServerFacade;
 import model.GameData;
+import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
-public class GameplayUI {
+public class GameplayUI implements NotificationHandler {
     private static String command;
     private static String[] params;
     private String authToken;
@@ -73,7 +75,7 @@ public class GameplayUI {
     }
 
     private void redraw(String[] params){
-        System.out.print("imagine this is the chess board");
+        System.out.print("imagine this is the chess board\n");
     }
 
     private void leave(String[] params){
@@ -90,6 +92,12 @@ public class GameplayUI {
 
     private void highlight(String[] params){
 
+    }
+
+    public void notify(ServerMessage notification) {
+        System.out.println(notification.getMessage());
+        System.out.println("testing notify 3\n");
+        //printPrompt();
     }
 
 }

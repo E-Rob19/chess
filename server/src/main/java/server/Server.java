@@ -7,6 +7,7 @@ import dataaccess.DataAccessException;
 import service.Service;
 import spark.*;
 import model.ErrorMessage;
+import websocket.WebSocketHandler;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        Spark.webSocket("/ws", WebSocketHandler.class);
 
         Spark.post("/user", this::register);
         Spark.delete("/db", this::clear);

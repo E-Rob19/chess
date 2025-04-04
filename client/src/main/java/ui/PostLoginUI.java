@@ -3,6 +3,7 @@ package ui;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
+import websocket.WebSocketFacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class PostLoginUI {
         params = Arrays.copyOfRange(token, 1, token.length);
     }
 
-    public void eval(String authToken, ServerFacade server, String username) throws DataFormatException {
+    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException {
         check = true;
         this.authToken = authToken;
         this.server = server;

@@ -1,5 +1,6 @@
 package ui;
 
+import dataaccess.DataAccessException;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 
@@ -21,8 +22,9 @@ public class PreLoginUI {
     private final NotificationHandler notificationHandler;
     private WebSocketFacade ws;
 
-    public PreLoginUI(NotificationHandler notificationHandler) {
+    public PreLoginUI(NotificationHandler notificationHandler) throws DataAccessException {
         this.notificationHandler = notificationHandler;
+        ws = new WebSocketFacade("http://localhost:8080", notificationHandler);
     }
 
 
@@ -75,7 +77,7 @@ public class PreLoginUI {
                 String authToken = res.authToken();
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successful login!\n");
-                new PostLoginUI().eval(authToken, server, username);
+                new PostLoginUI().eval(authToken, server, username, ws);
                 return;
             }
         }
@@ -112,7 +114,7 @@ public class PreLoginUI {
     }
 
     public void notify(ServerMessage notification) {
-        System.out.println(notification.message());
+        System.out.println(notification.getMessage());
         //printPrompt();
     }
 

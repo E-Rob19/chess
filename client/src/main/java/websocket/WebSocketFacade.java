@@ -30,10 +30,16 @@ public class WebSocketFacade extends Endpoint{
 
             //set message handler
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
-                    notificationHandler.notify(notification);
+                    try {
+                        ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
+                        System.out.print(message);
+                        notificationHandler.notify(notification);
+                    } catch (Exception ex) {
+                        System.out.print("failed to recieve message");
+                    }
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {

@@ -10,8 +10,8 @@ import org.eclipse.jetty.websocket.api.Session;
 public class ConnectionManager {
     public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
 
-    public void add(String username, Session session) {
-        var connection = new Connection(username, session);
+    public void add(String username, int gameID, Session session) {
+        var connection = new Connection(username, gameID, session);
         connections.put(username, connection);
     }
 
@@ -19,12 +19,23 @@ public class ConnectionManager {
         connections.remove(username);
     }
 
-    public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {
+    public void sendBack(String name, ServerMessage action) throws IOException {
+        for (var c : connections.values()) {
+            if (c.session.isOpen()) {
+                if (c.username.equals(name)) {
+                    c.send(action.toString());
+                }
+            }
+        }
+    }
+
+    public void broadcast(String excludeVisitorName, int gameID, ServerMessage notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.username.equals(excludeVisitorName)) {
-                    c.send(notification.toString());
+                if (!c.username.equals(excludeVisitorName) && c.gameID == gameID) {
+                    //send it with a JSON and not a string
+                    c.send(notification.getMessage());
                 }
             } else {
                 removeList.add(c);

@@ -17,6 +17,7 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 @WebSocket
@@ -31,7 +32,10 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> connect(command, session);
-            case MAKE_MOVE -> makeMove((MakeMoveCommand) command, session);
+            case MAKE_MOVE -> {
+                MakeMoveCommand moveCmd = new Gson().fromJson(message, MakeMoveCommand.class);
+                makeMove(moveCmd, session);
+            }
             case LEAVE -> leave(command, session);
             case RESIGN -> resign(command, session);
         }
@@ -61,17 +65,44 @@ public class WebSocketHandler {
     }
 
     private void makeMove(MakeMoveCommand command, Session session) throws IOException, DataAccessException, InvalidMoveException {
-        ChessMove move = command.getMove();
-        ChessGame game = gameDAO.getGame(command.getGameID()).game();
-        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) game.validMoves(move.getStartPosition());
-        boolean canMove = false;
-        for(ChessMove i : validMoves){
-            if(i.equals(move)){
-                canMove = true;
+        if(authDAO.getAuthFromToken(command.getAuthToken())==null) {
+            connections.add(command.getAuthToken(), command.getGameID(), session);
+            ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Unauthorized");
+            connections.sendBack(command.getAuthToken(), error);
+            //return;
+        } else {
+            ChessMove move = command.getMove();
+            ChessGame game = gameDAO.getGame(command.getGameID()).game();
+            String whiteUsername = gameDAO.getGame(command.getGameID()).whiteUsername();
+            String blackUsername = gameDAO.getGame(command.getGameID()).blackUsername();
+            String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
+            ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) game.validMoves(move.getStartPosition());
+            ChessGame.TeamColor color = game.getTeamTurn();
+            boolean canMove = false;
+            if (!Objects.equals(username, whiteUsername) && !Objects.equals(username, blackUsername)) {
+                ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Must be a player to make moves");
+                connections.sendBack(command.getAuthToken(), error);
             }
-        }
-        if(canMove){
-            game.makeMove(move);
+            for (ChessMove i : validMoves) {
+                if (i.equals(move)) {
+                    canMove = true;
+                }
+            }
+            if (canMove) {
+                game.makeMove(move);
+                //String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
+                game = gameDAO.getGame(command.getGameID()).game();
+                LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+                connections.sendBack(command.getAuthToken(), action);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), action);
+                var message = String.format("%s moved %s to %s", username, move.getStartPosition(), move.getEndPosition());
+                var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                //connections.sendBack(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            } else {
+                ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not a Valid Move");
+                connections.sendBack(command.getAuthToken(), error);
+            }
         }
     }
 

@@ -27,7 +27,9 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> connect(command, session);
-            //case EXIT -> exit(action.visitorName());
+            case MAKE_MOVE -> makeMove(command, session);
+            case LEAVE -> leave(command, session);
+            case RESIGN -> resign(command, session);
         }
     }
 
@@ -43,13 +45,26 @@ public class WebSocketHandler {
                 var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
             } else {
-
+                ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Unauthorized");
+                connections.sendBack(command.getAuthToken(), error);
             }
         } else {
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Bad Game ID");
             connections.sendBack(command.getAuthToken(), error);
         }
 
+
+    }
+
+    private void makeMove(UserGameCommand command, Session session) throws IOException, DataAccessException {
+
+    }
+
+    private void leave(UserGameCommand command, Session session) throws IOException, DataAccessException {
+
+    }
+
+    private void resign(UserGameCommand command, Session session) throws IOException, DataAccessException {
 
     }
 }

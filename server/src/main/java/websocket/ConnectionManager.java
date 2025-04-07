@@ -1,5 +1,9 @@
 package websocket;
 
+import com.google.gson.Gson;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -23,7 +27,9 @@ public class ConnectionManager {
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (c.username.equals(name)) {
-                    c.send(action.toString());
+                    //var serializer = new Gson();
+                    //c.send(serializer.toJson(action.getMessage()));
+                    c.send(action.getMessageJSON());
                 }
             }
         }
@@ -35,7 +41,7 @@ public class ConnectionManager {
             if (c.session.isOpen()) {
                 if (!c.username.equals(excludeVisitorName) && c.gameID == gameID) {
                     //send it with a JSON and not a string
-                    c.send(notification.getMessage());
+                    c.send(notification.getMessageJSON());
                 }
             } else {
                 removeList.add(c);

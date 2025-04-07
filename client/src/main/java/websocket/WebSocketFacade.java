@@ -38,7 +38,7 @@ public class WebSocketFacade extends Endpoint{
                         System.out.print(message);
                         notificationHandler.notify(notification);
                     } catch (Exception ex) {
-                        System.out.print("failed to recieve message");
+                        System.out.print("failed to receive message");
                     }
                 }
             });

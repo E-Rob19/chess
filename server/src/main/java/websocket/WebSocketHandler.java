@@ -1,10 +1,13 @@
 package websocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ErrorMessage;
@@ -13,6 +16,7 @@ import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 @WebSocket
@@ -23,11 +27,11 @@ public class WebSocketHandler {
     private AuthDataAccess authDAO = new SQLAuthDAO();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException, DataAccessException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> connect(command, session);
-            case MAKE_MOVE -> makeMove(command, session);
+            case MAKE_MOVE -> makeMove((MakeMoveCommand) command, session);
             case LEAVE -> leave(command, session);
             case RESIGN -> resign(command, session);
         }
@@ -56,8 +60,19 @@ public class WebSocketHandler {
 
     }
 
-    private void makeMove(UserGameCommand command, Session session) throws IOException, DataAccessException {
-
+    private void makeMove(MakeMoveCommand command, Session session) throws IOException, DataAccessException, InvalidMoveException {
+        ChessMove move = command.getMove();
+        ChessGame game = gameDAO.getGame(command.getGameID()).game();
+        ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) game.validMoves(move.getStartPosition());
+        boolean canMove = false;
+        for(ChessMove i : validMoves){
+            if(i.equals(move)){
+                canMove = true;
+            }
+        }
+        if(canMove){
+            game.makeMove(move);
+        }
     }
 
     private void leave(UserGameCommand command, Session session) throws IOException, DataAccessException {

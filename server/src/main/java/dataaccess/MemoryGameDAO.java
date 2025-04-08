@@ -36,6 +36,11 @@ public class MemoryGameDAO implements GameDataAccess{
     }
 
     @Override
+    public void updateGame(int gameID, ChessGame game, ChessGame.TeamColor color) throws DataAccessException {
+
+    }
+
+    @Override
     public void addPlayer(int gameID, String username, String playerColor) {
         for (GameData game : GAMES) {
             if (game.gameID() == gameID) {

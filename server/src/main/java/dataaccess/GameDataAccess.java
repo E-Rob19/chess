@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 import requests.GameDataShort;
 
@@ -13,6 +14,8 @@ public interface GameDataAccess {
     ArrayList<GameData> listGames() throws DataAccessException;
 
     //ArrayList<GameDataShort> listGamesForResponse() throws DataAccessException
+
+    void updateGame(int gameID, ChessGame game, ChessGame.TeamColor color) throws DataAccessException ;
 
     void addPlayer(int gameID, String username, String playerColor) throws DataAccessException;
 

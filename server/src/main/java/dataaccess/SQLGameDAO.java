@@ -6,6 +6,7 @@ import model.GameData;
 import requests.GameDataShort;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SQLGameDAO implements GameDataAccess {
 
@@ -68,7 +69,18 @@ public class SQLGameDAO implements GameDataAccess {
         return result;
     }
 
-
+    @Override
+    public void updateGame(int gameID, ChessGame game, ChessGame.TeamColor color) throws DataAccessException {
+        String statement = "";
+        var serializer = new Gson();
+        String serGame = serializer.toJson(game);
+        try (var conn = DatabaseManager.getConnection()) {
+            statement = "UPDATE games SET chessGame = ? WHERE gameID = ?;";
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        SQLAuthDAO.execute(statement, serGame, gameID);
+    }
 
     @Override
     public void addPlayer(int gameID, String username, String playerColor) throws DataAccessException {

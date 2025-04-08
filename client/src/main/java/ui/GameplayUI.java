@@ -95,7 +95,7 @@ public class GameplayUI implements NotificationHandler {
     }
 
     public void notify(ServerMessage notification) {
-        System.out.println(notification.getMessage());
+        //System.out.println(notification.getMessage());
         System.out.println("testing notify 3\n");
         //printPrompt();
     }

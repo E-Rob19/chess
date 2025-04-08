@@ -218,7 +218,7 @@ public class PostLoginUI implements NotificationHandler {
     }
 
     public void notify(ServerMessage notification) {
-        System.out.println(notification.getMessage());
+        //System.out.println(notification.getMessage());
         System.out.println("testing notify 2\n");
         //printPrompt();
     }

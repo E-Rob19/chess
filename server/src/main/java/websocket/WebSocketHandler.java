@@ -17,6 +17,7 @@ import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 
@@ -26,6 +27,7 @@ public class WebSocketHandler {
     private final ConnectionManager connections = new ConnectionManager();
     private GameDataAccess gameDAO = new SQLGameDAO();
     private AuthDataAccess authDAO = new SQLAuthDAO();
+    private static HashMap<Integer, Boolean> gameOverList = new HashMap<>();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException, InvalidMoveException {
@@ -79,7 +81,16 @@ public class WebSocketHandler {
         ArrayList<ChessMove> validMoves = (ArrayList<ChessMove>) game.validMoves(move.getStartPosition());
         ChessGame.TeamColor color = game.getTeamTurn();
         boolean canMove = false;
-        if(game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+        boolean check = false;
+        //if(game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+        //if(game.getGameOver()) {
+        for(int i : gameOverList.keySet()){
+            if (i == command.getGameID()) {
+                check = true;
+                break;
+            }
+        }
+        if(check) {
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "The game is over");
             connections.sendBack(command.getAuthToken(), error);
             return;
@@ -102,6 +113,16 @@ public class WebSocketHandler {
         }
         if (canMove) {
             game.makeMove(move);
+            ChessGame.TeamColor nextColor = game.getTeamTurn();
+
+            if(color == ChessGame.TeamColor.WHITE) {
+                game.setTeamTurn(ChessGame.TeamColor.BLACK);
+                nextColor = ChessGame.TeamColor.BLACK;
+            } else {
+                game.setTeamTurn(ChessGame.TeamColor.WHITE);
+                nextColor = ChessGame.TeamColor.WHITE;
+            }
+            gameDAO.updateGame(command.getGameID(), game, nextColor);
             //String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
             game = gameDAO.getGame(command.getGameID()).game();
             LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
@@ -124,6 +145,12 @@ public class WebSocketHandler {
         String whiteUsername = gameDAO.getGame(command.getGameID()).whiteUsername();
         String blackUsername = gameDAO.getGame(command.getGameID()).blackUsername();
         String color = "";
+        if (!username.equalsIgnoreCase(whiteUsername) && !username.equalsIgnoreCase(blackUsername)){
+            var message = String.format("%s has left the game", username);
+            var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            return;
+        }
         if (username.equalsIgnoreCase(whiteUsername)){
             color = "white";
         } else if (username.equalsIgnoreCase(blackUsername)) {
@@ -137,9 +164,26 @@ public class WebSocketHandler {
     }
 
     private void resign(UserGameCommand command, Session session) throws IOException, DataAccessException {
+
         String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
         String whiteUsername = gameDAO.getGame(command.getGameID()).whiteUsername();
         String blackUsername = gameDAO.getGame(command.getGameID()).blackUsername();
+        ChessGame game = gameDAO.getGame(command.getGameID()).game();
+        if (!Objects.equals(username, whiteUsername) && !Objects.equals(username, blackUsername)) {
+            ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Must be a player to make moves");
+            connections.sendBack(command.getAuthToken(), error);
+            return;
+        }
+        boolean check = false;
+        for(int i : gameOverList.keySet()){
+            if (i == command.getGameID()) {
+                ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "The game is over");
+                connections.sendBack(command.getAuthToken(), error);
+                return;
+            }
+        }
+        gameDAO.getGame(command.getGameID()).game().setGameOver(true);
+        gameOverList.put(command.getGameID(), true);
         var message = String.format("%s has resigned the game", username);
         var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.sendBack(command.getAuthToken(), notification);

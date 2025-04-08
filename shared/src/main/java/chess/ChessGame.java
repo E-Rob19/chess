@@ -13,6 +13,7 @@ public class ChessGame {
 
     private TeamColor teem = TeamColor.WHITE;
     private ChessBoard board = new ChessBoard();
+    private boolean gameOver = false;
 
     public ChessGame() {
         board.resetBoard();
@@ -23,6 +24,13 @@ public class ChessGame {
      */
     public TeamColor getTeamTurn() {
         return teem;
+    }
+
+    public boolean getGameOver() {
+        return gameOver;
+    }
+    public void setGameOver(boolean set) {
+        gameOver = set;
     }
 
     /**

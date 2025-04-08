@@ -88,12 +88,6 @@ public class WebSocketHandler {
         if(gameOverList.contains(command.getGameID())){
             check = true;
         }
-//        for(int i : gameOverList.keySet()){
-//            if (i == command.getGameID()) {
-//                check = true;
-//                break;
-//            }
-//        }
         if(check) {
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "The game is over");
             connections.sendBack(command.getAuthToken(), error);
@@ -184,13 +178,6 @@ public class WebSocketHandler {
             connections.sendBack(command.getAuthToken(), error);
             return;
         }
-//        for(int i : gameOverList.keySet()){
-//            if (i == command.getGameID()) {
-//                ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "The game is over");
-//                connections.sendBack(command.getAuthToken(), error);
-//                return;
-//            }
-//        }
         gameDAO.getGame(command.getGameID()).game().setGameOver(true);
         gameOverList.add(command.getGameID());
         var message = String.format("%s has resigned the game", username);

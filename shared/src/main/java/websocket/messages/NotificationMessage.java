@@ -15,9 +15,4 @@ public class NotificationMessage extends ServerMessage{
         return message;
     }
 
-//    @Override
-//    public String getMessageJSON() {
-//        var serializer = new Gson();
-//        return serializer.toJson(this);
-//    }
 }

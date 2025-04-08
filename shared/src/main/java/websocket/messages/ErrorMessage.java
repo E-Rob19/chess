@@ -14,9 +14,4 @@ public class ErrorMessage extends ServerMessage{
         return errorMessage;
     }
 
-//    @Override
-//    public String getMessageJSON() {
-//        var serializer = new Gson();
-//        return serializer.toJson(this);
-//    }
 }

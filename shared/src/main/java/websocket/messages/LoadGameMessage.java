@@ -16,9 +16,4 @@ public class LoadGameMessage extends ServerMessage{
         return game;
     }
 
-//    @Override
-//    public String getMessageJSON() {
-//        var serializer = new Gson();
-//        return serializer.toJson(this);
-//    }
 }

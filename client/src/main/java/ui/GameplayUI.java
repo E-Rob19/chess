@@ -24,21 +24,21 @@ public class GameplayUI implements NotificationHandler {
 
     public static void parseInput(String input){
         var token = input.toLowerCase().split(" ");
-        command = (token.length > 0) ? token[0] : "help";
         params = Arrays.copyOfRange(token, 1, token.length);
+        command = (token.length > 0) ? token[0] : "help";
     }
 
     public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException {
-        check = true;
-        this.authToken = authToken;
-        this.server = server;
         this.username = username;
         this.ws = ws;
+        this.authToken = authToken;
+        this.server = server;
+        check = true;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to the gameplay!\n");
-        help();
         String[] lis = {};
         redraw(lis);
+        help();
         while (check) {
             System.out.print(EscapeSequences.RESET_TEXT_COLOR);
             System.out.print("[LOGGED-IN] >>> ");

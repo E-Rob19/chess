@@ -1,6 +1,6 @@
 package ui;
 
-import dataaccess.DataAccessException;
+//import dataaccess.DataAccessException;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 
@@ -10,6 +10,7 @@ import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class PreLoginUI implements NotificationHandler{
     private final NotificationHandler notificationHandler;
     private WebSocketFacade ws;
 
-    public PreLoginUI() throws DataAccessException {
+    public PreLoginUI() throws IOException {
         this.notificationHandler = this;
         ws = new WebSocketFacade("http://localhost:8080", this);
     }
@@ -35,7 +36,7 @@ public class PreLoginUI implements NotificationHandler{
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval() throws DataFormatException, DataAccessException {
+    public void eval() throws DataFormatException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -67,7 +68,7 @@ public class PreLoginUI implements NotificationHandler{
         System.out.print(" - quit\n");
     }
 
-    private void login(String[] params) throws DataFormatException, DataAccessException {
+    private void login(String[] params) throws DataFormatException, IOException {
         if (params.length == 2) {
             String username = params[0];
             String password = params[1];
@@ -87,7 +88,7 @@ public class PreLoginUI implements NotificationHandler{
         System.out.print("login with an existing username and password, or register new user\n");
     }
 
-    private void register(String[] params) throws DataFormatException, DataAccessException {
+    private void register(String[] params) throws DataFormatException, IOException {
         if (params.length == 3) {
             String username = params[0];
             String password = params[1];

@@ -1,6 +1,6 @@
 package ui;
 
-import dataaccess.DataAccessException;
+//import dataaccess.DataAccessException;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
@@ -8,6 +8,7 @@ import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class PostLoginUI implements NotificationHandler {
         params = Arrays.copyOfRange(token, 1, token.length);
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, DataAccessException {
+    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, IOException {
         check = true;
         this.authToken = authToken;
         this.server = server;
@@ -177,7 +178,7 @@ public class PostLoginUI implements NotificationHandler {
         }
     }
 
-    private void observe(String[] params) throws DataFormatException, DataAccessException {
+    private void observe(String[] params) throws DataFormatException, IOException {
         if(params.length == 1){
             int id = 0;
             try {

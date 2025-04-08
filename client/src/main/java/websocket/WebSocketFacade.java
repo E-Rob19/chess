@@ -2,7 +2,7 @@ package websocket;
 
 import com.google.gson.Gson;
 //import exception.ResponseException;
-import dataaccess.DataAccessException;
+//import dataaccess.DataAccessException;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -19,7 +19,7 @@ public class WebSocketFacade extends Endpoint{
     NotificationHandler notificationHandler;
 
 
-    public WebSocketFacade(String url, NotificationHandler notificationHandler) throws DataAccessException {
+    public WebSocketFacade(String url, NotificationHandler notificationHandler) throws IOException {
         try {
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");
@@ -43,16 +43,16 @@ public class WebSocketFacade extends Endpoint{
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new IOException(ex.getMessage());
         }
     }
 
-    public void connect(String authToken, Integer gameID) throws DataAccessException {
+    public void connect(String authToken, Integer gameID) throws IOException {
         try {
             var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
-            throw new DataAccessException(ex.getMessage());
+            throw new IOException(ex.getMessage());
         }
     }
 

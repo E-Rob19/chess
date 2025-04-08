@@ -45,6 +45,7 @@ public class WebSocketHandler {
 
     private void connect(UserGameCommand command, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), command.getGameID(), session);
+        gameOverList.remove(command.getGameID());
         if(command.getGameID() <= gameDAO.listGames().size()) {
             if(authDAO.getAuthFromToken(command.getAuthToken())!=null) {
                 String username = authDAO.getAuthFromToken(command.getAuthToken()).username();

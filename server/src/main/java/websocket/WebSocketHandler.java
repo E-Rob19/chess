@@ -98,7 +98,8 @@ public class WebSocketHandler {
             connections.sendBack(command.getAuthToken(), error);
             return;
         }
-        if ((Objects.equals(username, whiteUsername) && color != ChessGame.TeamColor.WHITE) || (Objects.equals(username, blackUsername) && color != ChessGame.TeamColor.BLACK)){
+        boolean whiteCheck = (Objects.equals(username, whiteUsername) && color != ChessGame.TeamColor.WHITE);
+        if ( whiteCheck || (Objects.equals(username, blackUsername) && color != ChessGame.TeamColor.BLACK)){
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not your turn");
             connections.sendBack(command.getAuthToken(), error);
             return;

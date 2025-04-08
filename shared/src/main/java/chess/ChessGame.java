@@ -91,7 +91,14 @@ public class ChessGame {
             throw new InvalidMoveException("wrong team color");
         }
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
-        if(!moves.contains(move)){
+        boolean check = false;
+        for (ChessMove i : moves) {
+            if (i.equals(move)) {
+                check = true;
+                break;
+            }
+        }
+        if(!check){
             throw new InvalidMoveException("not a valid move for that piece");
         }
 

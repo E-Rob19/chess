@@ -54,7 +54,14 @@ public class WebSocketHandler {
                 ChessGame game = gameDAO.getGame(command.getGameID()).game();
                 LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
                 connections.sendBack(command.getAuthToken(), action);
-                var message = String.format("%s connected to the game", username);
+                String message = "";
+                if(Objects.equals(gameDAO.getGame(command.getGameID()).whiteUsername(), username)) {
+                    message = String.format("%s connected to the game as the white player", username);
+                } else if (Objects.equals(gameDAO.getGame(command.getGameID()).blackUsername(), username)) {
+                    message = String.format("%s connected to the game as the black player", username);
+                } else {
+                    message = String.format("%s connected to the game as an observer", username);
+                }
                 var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
             } else {
@@ -127,7 +134,7 @@ public class WebSocketHandler {
             gameDAO.updateGame(command.getGameID(), game, nextColor);
 
             //String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
-            game = gameDAO.getGame(command.getGameID()).game();
+            //game = gameDAO.getGame(command.getGameID()).game();
             LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.sendBack(command.getAuthToken(), action);
             connections.broadcast(command.getAuthToken(), command.getGameID(), action);

@@ -48,8 +48,8 @@ public class GameplayUI implements NotificationHandler {
         check = true;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to the gameplay!\n");
-        String[] lis = {};
-        redraw(lis);
+        //String[] lis = {};
+        //redraw(lis);
         help();
         while (check) {
             updateGame();
@@ -112,7 +112,7 @@ public class GameplayUI implements NotificationHandler {
     }
 
     private void move(String[] params) throws IOException, DataFormatException, InvalidMoveException {
-        if(params.length > 2){
+        if(params.length != 2){
             System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             System.out.print("move only takes two inputs\n");
             return;
@@ -122,10 +122,21 @@ public class GameplayUI implements NotificationHandler {
             System.out.print("not your turn!\n");
             return;
         }
+
         String start = params[0];
         String end = params[1];
         ChessPosition startPos = parsePosition(start);
         ChessPosition endPos = parsePosition(end);
+        if(!checkPositionValid(start)){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("not a valid chess position\n");
+            return;
+        }
+        if(gameData.game().validMoves(startPos) == null){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("no piece in that position\n");
+            return;
+        }
         String promotion = null;
         ChessPiece.PieceType type = null;
         if(gameData.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN  && (endPos.getRow() == 1|| endPos.getRow() == 8)){
@@ -144,7 +155,7 @@ public class GameplayUI implements NotificationHandler {
         }
         ChessMove move = new ChessMove(startPos, endPos, type);
         ws.makeMove(authToken, gameData.gameID(), move);
-        gameData.game().makeMove(move);
+        //gameData.game().makeMove(move);
         updateGame();
     }
 

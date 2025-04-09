@@ -26,13 +26,13 @@ public class PreLoginUI implements NotificationHandler{
     private static String command;
     private static String[] params;
     public static ServerFacade server = new ServerFacade("http://localhost:8080");
-    private final NotificationHandler notificationHandler;
-    private WebSocketFacade ws;
+//    private final NotificationHandler notificationHandler;
+//    private WebSocketFacade ws;
 
-    public PreLoginUI() throws IOException {
-        this.notificationHandler = this;
-        ws = new WebSocketFacade("http://localhost:8080", this);
-    }
+//    public PreLoginUI() throws IOException {
+//        this.notificationHandler = this;
+//        ws = new WebSocketFacade("http://localhost:8080", this);
+//    }
 
 
     public static void parseInput(String input){
@@ -84,7 +84,7 @@ public class PreLoginUI implements NotificationHandler{
                 String authToken = res.authToken();
                 System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
                 System.out.print("Successful login!\n");
-                new PostLoginUI().eval(authToken, server, username, ws);
+                new PostLoginUI().eval(authToken, server, username);
                 return;
             }
         }
@@ -142,7 +142,9 @@ public class PreLoginUI implements NotificationHandler{
 
     public void notify(ServerMessage notification, String message) throws DataFormatException {
         if(notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
-            ChessGame game = new Gson().fromJson(message, ChessGame.class);
+            LoadGameMessage gameGame = new Gson().fromJson(message, LoadGameMessage.class);
+            ChessGame game = new Gson().fromJson(gameGame.getMessage(), ChessGame.class);
+            System.out.print("\n");
             PrintChessBoard printer = new PrintChessBoard();
             printer.print(game, null);
             return;

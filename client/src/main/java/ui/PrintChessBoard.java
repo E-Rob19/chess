@@ -18,8 +18,6 @@ public class PrintChessBoard {
         }
         if(highlight == null){
             this.highlight = new ArrayList<>();
-        } else if (highlight.isEmpty()) {
-            //this.highlight.add(highlight.getFirst().getStartPosition());
         } else {
             this.highlight.clear();
             this.highlight.add(highlight.getFirst().getStartPosition());
@@ -45,11 +43,26 @@ public class PrintChessBoard {
             //printHelper(i, piece);
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(" "+i+" ");
+            boolean high = false;
             for(int j = 8; j > 0; j--){
+                high = false;
+                for(ChessPosition pos : this.highlight){
+                    if (pos.getRow() == i && pos.getColumn() == j){
+                        high = true;
+                    }
+                }
                 if((i+j)%2==0){
-                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                    if(high){
+                        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
+                    } else {
+                        System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                    }
                 } else {
-                    System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                    if(high){
+                        System.out.print(EscapeSequences.SET_BG_COLOR_GREEN);
+                    } else {
+                        System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                    }
                 }
                 piece = board.getPiece(new ChessPosition(i,j));
                 printPiece(piece);

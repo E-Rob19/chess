@@ -1,12 +1,15 @@
 package ui;
 
 //import dataaccess.DataAccessException;
+import chess.ChessGame;
 import chess.InvalidMoveException;
+import com.google.gson.Gson;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -25,7 +28,15 @@ public class PostLoginUI implements NotificationHandler {
     public WebSocketFacade ws;
     private ArrayList<GameData> gameList;
     private boolean check = true;
-    private PrintChessBoard printFunc = new PrintChessBoard();
+    //private PrintChessBoard printFunc = new PrintChessBoard();
+    private final NotificationHandler notificationHandler;
+    boolean playingWhite;
+    //private WebSocketFacade ws;
+
+    public PostLoginUI() throws IOException {
+        this.notificationHandler = this;
+        ws = new WebSocketFacade("http://localhost:8080", this);
+    }
 
     public static void parseInput(String input){
         var token = input.toLowerCase().split(" ");
@@ -33,12 +44,11 @@ public class PostLoginUI implements NotificationHandler {
         params = Arrays.copyOfRange(token, 1, token.length);
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, IOException, InvalidMoveException {
+    public void eval(String authToken, ServerFacade server, String username) throws DataFormatException, IOException, InvalidMoveException {
         check = true;
         this.authToken = authToken;
         this.server = server;
         this.username = username;
-        this.ws = ws;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -131,6 +141,7 @@ public class PostLoginUI implements NotificationHandler {
             String res = server.joinGame(req);
             System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
             System.out.print("Successful join!\n");
+            playingWhite = !colorCheck;
             ws.connect(authToken, id);
             new GameplayUI().eval(authToken, server, username, ws, gameList.get(id-1), colorCheck);
             return;
@@ -225,8 +236,22 @@ public class PostLoginUI implements NotificationHandler {
     }
 
     public void notify(ServerMessage notification, String message) {
-        //System.out.println(notification.getMessage());
-        //System.out.println("testing notify 2\n");
-        //printPrompt();
+        if(notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+            LoadGameMessage gameGame = new Gson().fromJson(message, LoadGameMessage.class);
+            ChessGame game = new Gson().fromJson(gameGame.getMessage(), ChessGame.class);
+            System.out.print("\n");
+            PrintChessBoard printer = new PrintChessBoard();
+            if(playingWhite) {
+                printer.print(game, null);
+            } else {
+                printer.printBack(game, null);
+            }
+            return;
+        }
+        var tokens = message.toLowerCase().split("\"");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        System.out.println(tokens[3]);
+        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println("\n[IN-GAME] >>> ");
     }
 }

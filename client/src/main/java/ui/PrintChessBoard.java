@@ -24,12 +24,13 @@ public class PrintChessBoard {
             for (ChessMove chessMove : highlight) {
                 this.highlight.add(chessMove.getEndPosition());
             }
+            this.highlight.add(highlight.getFirst().getStartPosition());
+            this.highlight.removeLast();
         }
         ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"h", "g", "f", "e", "d", "c", "b", "a"};
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-
         System.out.print(EscapeSequences.EMPTY);
         for (int i = 0; i < 8; i++){
             System.out.print(" " + letters[i] + " ");

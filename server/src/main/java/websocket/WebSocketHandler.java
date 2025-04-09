@@ -163,9 +163,7 @@ public class WebSocketHandler {
                 notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 connections.sendBack(command.getAuthToken(), notification);
                 connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
-            }
-            //check if in check
-            if(game.isInCheck(ChessGame.TeamColor.WHITE)){
+            } else if(game.isInCheck(ChessGame.TeamColor.WHITE)){
                 message = String.format("%s is in check!", gameDAO.getGame(command.getGameID()).whiteUsername());
                 notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
                 connections.sendBack(command.getAuthToken(), notification);

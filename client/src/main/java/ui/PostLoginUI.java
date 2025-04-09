@@ -78,7 +78,7 @@ public class PostLoginUI implements NotificationHandler {
         //System.out.print(" - quit\n");
     }
 
-    private void play(String[] params) throws DataFormatException {
+    private void play(String[] params) throws DataFormatException, IOException {
         if (params.length == 2) {
             int id = 0;
             try {
@@ -100,6 +100,7 @@ public class PostLoginUI implements NotificationHandler {
                 return;
             }
             GameData game = gameList.get(id-1);
+            boolean colorCheck = false;
             if(color.equalsIgnoreCase("white")){
                 if(game.whiteUsername() != null) {
                     System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
@@ -113,6 +114,7 @@ public class PostLoginUI implements NotificationHandler {
                 }
             }
             if(color.equalsIgnoreCase("black")){
+                colorCheck = true;
                 if(game.blackUsername() != null) {
                     System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     System.out.print("game already has a black player\n");
@@ -128,14 +130,17 @@ public class PostLoginUI implements NotificationHandler {
             String res = server.joinGame(req);
             System.out.print(EscapeSequences.SET_TEXT_COLOR_GREEN);
             System.out.print("Successful join!\n");
-            String [] lis = {};
-            listGames(lis);
-            if(color.equalsIgnoreCase("white")){
-                printFunc.print(null);
-            } else {
-                printFunc.printBack(null);
-            }
+            ws.connect(authToken, id);
+            new GameplayUI().eval(authToken, server, username, ws, gameList.get(id-1), colorCheck);
             return;
+//            String [] lis = {};
+//            listGames(lis);
+//            if(color.equalsIgnoreCase("white")){
+//                printFunc.print(null);
+//            } else {
+//                printFunc.printBack(null);
+//            }
+//            return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
         System.out.print("unable to join\n");
@@ -198,7 +203,7 @@ public class PostLoginUI implements NotificationHandler {
             //add print chess board things here
             //printFunc.print(null);
             ws.connect(authToken, id);
-            new GameplayUI().eval(authToken, server, username, ws);
+            new GameplayUI().eval(authToken, server, username, ws, gameList.get(id-1), false);
             return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);

@@ -7,6 +7,8 @@ import model.GameData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.ArrayList;
+
 public class Service {
 
     UserDataAccess userDatabase;
@@ -57,7 +59,9 @@ public class Service {
             return null;
         }
 
-        return new ListResponse(gameDatabase.listGames());
+        ArrayList<GameData> lis = gameDatabase.listGames();
+
+        return new ListResponse(lis);
     }
 
     public CreateGameResponse createGame(CreateGameRequest createGameRequest) throws DataAccessException {

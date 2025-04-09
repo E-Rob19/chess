@@ -137,7 +137,7 @@ public class Server {
             newRes.games().add(new GameDataShort(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
         }
 
-        return serializer.toJson(newRes);
+        return serializer.toJson(lRes);
     }
 
     private Object createGame(Request req, Response res) throws DataAccessException{

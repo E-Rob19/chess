@@ -5,6 +5,7 @@ import chess.ChessMove;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.MakeMoveCommand;
@@ -185,5 +186,9 @@ public class WebSocketHandler {
         var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.sendBack(command.getAuthToken(), notification);
         connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+    }
+
+    public ArrayList<GameData> listGames() throws DataAccessException {
+        return gameDAO.listGames();
     }
 }

@@ -27,8 +27,9 @@ public class PrintChessBoard {
         }
         ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"h", "g", "f", "e", "d", "c", "b", "a"};
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+
         System.out.print(EscapeSequences.EMPTY);
         for (int i = 0; i < 8; i++){
             System.out.print(" " + letters[i] + " ");
@@ -40,15 +41,15 @@ public class PrintChessBoard {
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
         for(int i = 1; i < 9; i++){
-            //printHelper(i, piece);
+            boolean high;
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(" "+i+" ");
-            boolean high = false;
             for(int j = 8; j > 0; j--){
                 high = false;
                 for(ChessPosition pos : this.highlight){
-                    if (pos.getRow() == i && pos.getColumn() == j){
+                    if (pos.getRow() == i && pos.getColumn() == j) {
                         high = true;
+                        break;
                     }
                 }
                 if((i+j)%2==0){

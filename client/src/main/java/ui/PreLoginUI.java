@@ -1,7 +1,9 @@
 package ui;
 
 //import dataaccess.DataAccessException;
+import chess.ChessGame;
 import chess.InvalidMoveException;
+import com.google.gson.Gson;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 
@@ -9,6 +11,9 @@ import facade.ServerFacade;
 import requests.RegisterResult;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -115,10 +120,49 @@ public class PreLoginUI implements NotificationHandler{
         System.out.print("register with a username, password, and email\n");
     }
 
-    public void notify(ServerMessage notification) {
-        //System.out.println(notification.getMessage());
-        System.out.println("testing notify\n");
+    public void notifyError(ErrorMessage notification) {
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        System.out.println(notification.getMessage());
+        System.out.println("\n");
+    }
+
+    public void notifyMessage(NotificationMessage notification) {
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        System.out.println(notification.getMessage());
+        System.out.println("\n");
+    }
+
+    public void notifyGame(LoadGameMessage notification) throws DataFormatException {
+        PrintChessBoard printer = new PrintChessBoard();
+        //printer.print(notification.getMessage(), null);
+        //updateGame();
+        System.out.println("\n");
         //printPrompt();
     }
 
+    public void notify(ServerMessage notification, String message) throws DataFormatException {
+        if(notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+            ChessGame game = new Gson().fromJson(message, ChessGame.class);
+            PrintChessBoard printer = new PrintChessBoard();
+            printer.print(game, null);
+            return;
+            //updateGame();
+        }
+        var tokens = message.toLowerCase().split("\"");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        System.out.println(tokens[3]);
+        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println("\n[IN-GAME] >>> ");
+        //System.out.println("testing notify\n");
+        //printPrompt();
+        //GameplayUI ui = new GameplayUI();
+        //ui.notify(notification);
+//        if(notification.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION){
+//            notifyMessage((NotificationMessage) notification);
+//        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
+//            notifyError((ErrorMessage) notification);
+//        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+//            notifyGame((LoadGameMessage) notification);
+//        }
+    }
 }

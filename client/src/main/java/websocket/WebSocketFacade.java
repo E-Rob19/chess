@@ -40,8 +40,8 @@ public class WebSocketFacade extends Endpoint{
                 public void onMessage(String message) {
                     try {
                         ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
-                        System.out.print(message);
-                        notificationHandler.notify(notification);
+                        //System.out.print(message);
+                        notificationHandler.notify(notification, message);
                     } catch (Exception ex) {
                         System.out.print("failed to receive message");
                     }

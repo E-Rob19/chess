@@ -12,8 +12,8 @@ public class LoadGameMessage extends ServerMessage{
         this.game = game;
     }
 
-    public ChessGame getMessage() {
-        return game;
+    public String getMessage() {
+        return new Gson().toJson(game);
     }
 
 }

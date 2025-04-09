@@ -28,6 +28,10 @@ public class ServerMessage {
         return this.serverMessageType;
     }
 
+    public String getMessage(){
+        return "test";
+    }
+
     public String getMessageJSON() {
         var serializer = new Gson();
         return serializer.toJson(this);

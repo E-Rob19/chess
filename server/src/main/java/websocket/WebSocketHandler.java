@@ -2,6 +2,7 @@ package websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.*;
@@ -130,7 +131,8 @@ public class WebSocketHandler {
             LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.sendBack(command.getAuthToken(), action);
             connections.broadcast(command.getAuthToken(), command.getGameID(), action);
-            var message = String.format("%s moved %s to %s", username, move.getStartPosition().toString(), move.getEndPosition().toString());
+
+            var message = String.format("%s moved %s to %s", username, positionConvert(move.getStartPosition()), positionConvert(move.getEndPosition()));
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             //connections.sendBack(command.getAuthToken(), notification);
             connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
@@ -192,5 +194,31 @@ public class WebSocketHandler {
 
     public ArrayList<GameData> listGames() throws DataAccessException {
         return gameDAO.listGames();
+    }
+
+    private String positionConvert(ChessPosition position){
+        String pos = "";
+        int col = position.getColumn();
+        int row = position.getRow();
+
+        if(col == 1){
+            pos += "a";
+        } else if (col == 2) {
+            pos += "b";
+        } else if (col == 3) {
+            pos += "c";
+        }else if (col == 4) {
+            pos += "d";
+        }else if (col == 5) {
+            pos += "e";
+        }else if (col == 6) {
+            pos += "f";
+        }else if (col == 7) {
+            pos += "g";
+        }else if (col == 8) {
+            pos += "h";
+        }
+        pos += row;
+        return pos;
     }
 }

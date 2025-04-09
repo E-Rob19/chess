@@ -51,9 +51,31 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "ChessPosition{" +
-                "row=" + row +
-                ", col=" + col +
-                '}';
+        String pos = "";
+
+        if(col == 1){
+            pos += "a";
+        } else if (col == 2) {
+            pos += "b";
+        } else if (col == 3) {
+            pos += "c";
+        }else if (col == 4) {
+            pos += "d";
+        }else if (col == 5) {
+            pos += "e";
+        }else if (col == 6) {
+            pos += "f";
+        }else if (col == 7) {
+            pos += "g";
+        }else if (col == 8) {
+            pos += "h";
+        }
+        pos += row;
+        return pos;
+
+//        return "ChessPosition{" +
+//                "row=" + row +
+//                ", col=" + col +
+//                '}';
     }
 }

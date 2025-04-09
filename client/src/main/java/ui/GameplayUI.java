@@ -9,6 +9,7 @@ import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -86,7 +87,13 @@ public class GameplayUI implements NotificationHandler {
         //System.out.print(" - quit\n");
     }
 
-    private void redraw(String[] params){
+    private void redraw(String[] params) throws DataFormatException {
+        if(params.length > 0){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("redraw doesn't take any inputs\n");
+            return;
+        }
+        updateGame();
         if(checkIfBlack){
             printFunc.printBack(gameData.game(), null);
         } else {
@@ -95,11 +102,21 @@ public class GameplayUI implements NotificationHandler {
     }
 
     private void leave(String[] params) throws IOException {
+        if(params.length > 0){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("leave doesn't take any inputs\n");
+            return;
+        }
         ws.leave(authToken, gameData.gameID());
         check = false;
     }
 
     private void move(String[] params) throws IOException, DataFormatException, InvalidMoveException {
+        if(params.length > 2){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("move only takes two inputs\n");
+            return;
+        }
         if((!checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.BLACK) || (checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.WHITE)){
             System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             System.out.print("not your turn!\n");
@@ -132,11 +149,26 @@ public class GameplayUI implements NotificationHandler {
     }
 
     private void resign(String[] params) throws IOException {
+        if(params.length > 0){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("resign doesn't take any inputs\n");
+            return;
+        }
         ws.resign(authToken, gameData.gameID());
     }
 
     private void highlight(String[] params){
         String start = params[0];
+        if(params.length > 1){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("highlight only takes one input\n");
+            return;
+        }
+        if(!checkPositionValid(start)){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("not a valid chess position\n");
+            return;
+        }
         ChessPosition startPos = parsePosition(start);
         if(gameData.game().validMoves(startPos) == null){
             System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
@@ -160,27 +192,42 @@ public class GameplayUI implements NotificationHandler {
         LogoutRequest req = new LogoutRequest(authToken);
         ListResponse res = server.listGames(req);
         if(res == null){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             System.out.print("cannot update game\n");
             return;
         }
         gameData = res.games().get(gameData.gameID()-1);
     }
 
-    public void notify(ErrorMessage notification) {
+    public void notifyError(ErrorMessage notification) {
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
         System.out.println(notification.getMessage());
         System.out.println("\n");
     }
 
-    public void notify(LoadGameMessage notification) throws DataFormatException {
-        printFunc.print(notification.getMessage(), null);
+    public void notifyMessage(NotificationMessage notification) {
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        System.out.println(notification.getMessage());
+        System.out.println("\n");
+    }
+
+    public void notifyGame(ServerMessage notification) throws DataFormatException {
+        //printFunc.print(notification.getMessage(), null);
         updateGame();
         System.out.println("\n");
         //printPrompt();
     }
 
     @Override
-    public void notify(ServerMessage notification) {
-        System.out.println("testNotify\n");
+    public void notify(ServerMessage notification, String message) throws DataFormatException {
+        //System.out.println("testNotify\n");
+        if(notification.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION){
+            notifyMessage((NotificationMessage) notification);
+        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
+            notifyError((ErrorMessage) notification);
+        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+            notifyGame(notification);
+        }
     }
 
     private ChessPosition parsePosition(String start) {

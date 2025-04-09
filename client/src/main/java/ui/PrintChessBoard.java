@@ -1,19 +1,31 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+
+import java.util.ArrayList;
 
 public class PrintChessBoard {
     private ChessBoard board;
+    private ArrayList<ChessPosition> highlight = new ArrayList<>();;
 
-    public void printBack(ChessGame game){
+    public void printBack(ChessGame game, ArrayList<ChessMove> highlight){
         if (game == null){
-            board = new ChessBoard();
-            board.resetBoard();
+//            board = new ChessBoard();
+//            board.resetBoard();
+            return;
         } else {
             board = game.getBoard();
+        }
+        if(highlight == null){
+            this.highlight = new ArrayList<>();
+        } else if (highlight.isEmpty()) {
+            //this.highlight.add(highlight.getFirst().getStartPosition());
+        } else {
+            this.highlight.clear();
+            this.highlight.add(highlight.getFirst().getStartPosition());
+            for (ChessMove chessMove : highlight) {
+                this.highlight.add(chessMove.getEndPosition());
+            }
         }
         ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"h", "g", "f", "e", "d", "c", "b", "a"};
@@ -30,7 +42,23 @@ public class PrintChessBoard {
         System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
         System.out.print("\n");
         for(int i = 1; i < 9; i++){
-            printHelper(i, piece);
+            //printHelper(i, piece);
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print(" "+i+" ");
+            for(int j = 8; j > 0; j--){
+                if((i+j)%2==0){
+                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                } else {
+                    System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                }
+                piece = board.getPiece(new ChessPosition(i,j));
+                printPiece(piece);
+            }
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(" "+i+" ");
+            System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+            System.out.print("\n");
         }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(EscapeSequences.EMPTY);
@@ -44,12 +72,21 @@ public class PrintChessBoard {
         System.out.print("\n");
     }
 
-    public void print(ChessGame game){
+    public void print(ChessGame game, ArrayList<ChessMove> highlight){
         if (game == null){
             board = new ChessBoard();
             board.resetBoard();
         } else {
             board = game.getBoard();
+        }
+        if(highlight == null){
+            this.highlight = new ArrayList<>();
+        } else {
+            this.highlight.clear();
+            this.highlight.add(highlight.getFirst().getStartPosition());
+            for (ChessMove chessMove : highlight) {
+                this.highlight.add(chessMove.getEndPosition());
+            }
         }
         ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"a", "b", "c", "d", "e", "f", "g", "h"};
@@ -85,11 +122,26 @@ public class PrintChessBoard {
     private void printHelper(int i, ChessPiece piece){
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(" "+i+" ");
+        boolean high = false;
         for(int j = 1; j < 9; j++){
+            high = false;
+            for(ChessPosition pos : highlight){
+                if (pos.getRow() == i && pos.getColumn() == j){
+                    high = true;
+                }
+            }
             if((i+j)%2==0){
-                System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                if(high){
+                    System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
+                } else {
+                    System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                }
             } else {
-                System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                if(high){
+                    System.out.print(EscapeSequences.SET_BG_COLOR_GREEN);
+                } else {
+                    System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                }
             }
             piece = board.getPiece(new ChessPosition(i,j));
             printPiece(piece);
@@ -97,7 +149,7 @@ public class PrintChessBoard {
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(" "+i+" ");
-        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+        System.out.print(EscapeSequences.RESET_BG_COLOR);
         System.out.print("\n");
     }
 

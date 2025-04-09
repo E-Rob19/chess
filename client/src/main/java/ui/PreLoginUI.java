@@ -1,6 +1,7 @@
 package ui;
 
 //import dataaccess.DataAccessException;
+import chess.InvalidMoveException;
 import requests.LoginRequest;
 import requests.RegisterRequest;
 
@@ -36,7 +37,7 @@ public class PreLoginUI implements NotificationHandler{
         params = Arrays.copyOfRange(tokens, 1, tokens.length);
     }
 
-    public void eval() throws DataFormatException, IOException {
+    public void eval() throws DataFormatException, IOException, InvalidMoveException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to Chess!\n");
         help();
@@ -68,7 +69,7 @@ public class PreLoginUI implements NotificationHandler{
         System.out.print(" - quit\n");
     }
 
-    private void login(String[] params) throws DataFormatException, IOException {
+    private void login(String[] params) throws DataFormatException, IOException, InvalidMoveException {
         if (params.length == 2) {
             String username = params[0];
             String password = params[1];
@@ -88,7 +89,7 @@ public class PreLoginUI implements NotificationHandler{
         System.out.print("login with an existing username and password, or register new user\n");
     }
 
-    private void register(String[] params) throws DataFormatException, IOException {
+    private void register(String[] params) throws DataFormatException, IOException, InvalidMoveException {
         if (params.length == 3) {
             String username = params[0];
             String password = params[1];

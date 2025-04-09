@@ -1,8 +1,6 @@
 package ui;
 
-import chess.ChessMove;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import facade.ServerFacade;
 import model.GameData;
 import requests.ListResponse;
@@ -16,6 +14,7 @@ import websocket.messages.ServerMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
@@ -37,7 +36,7 @@ public class GameplayUI implements NotificationHandler {
         command = (token.length > 0) ? token[0] : "help";
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws, GameData gameData, boolean checkIfBlack) throws DataFormatException, IOException {
+    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws, GameData gameData, boolean checkIfBlack) throws DataFormatException, IOException, InvalidMoveException {
         this.username = username;
         this.ws = ws;
         this.authToken = authToken;
@@ -52,8 +51,9 @@ public class GameplayUI implements NotificationHandler {
         redraw(lis);
         help();
         while (check) {
+            updateGame();
             System.out.print(EscapeSequences.RESET_TEXT_COLOR);
-            System.out.print("[LOGGED-IN] >>> ");
+            System.out.print("[IN-GAME] >>> ");
             parseInput(scanner.nextLine());
             switch (command) {
                 case "redraw" -> redraw(params);
@@ -70,15 +70,15 @@ public class GameplayUI implements NotificationHandler {
         System.out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
         System.out.print("Available commands:\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-        System.out.print(" - redraw <NAME>\n");
+        System.out.print(" - redraw\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         System.out.print(" - leave\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-        System.out.print(" - move <ID> [WHITE/BLACK]\n");
+        System.out.print(" - move <start position> <end position>\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-        System.out.print(" - resign <ID>\n");
+        System.out.print(" - resign\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
-        System.out.print(" - highlight\n");
+        System.out.print(" - highlight <position>\n");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_MAGENTA);
         System.out.print(" - help\n");
 
@@ -88,9 +88,9 @@ public class GameplayUI implements NotificationHandler {
 
     private void redraw(String[] params){
         if(checkIfBlack){
-            printFunc.printBack(gameData.game());
+            printFunc.printBack(gameData.game(), null);
         } else {
-            printFunc.print(gameData.game());
+            printFunc.print(gameData.game(), null);
         }
     }
 
@@ -99,14 +99,19 @@ public class GameplayUI implements NotificationHandler {
         check = false;
     }
 
-    private void move(String[] params) throws IOException, DataFormatException {
+    private void move(String[] params) throws IOException, DataFormatException, InvalidMoveException {
+        if((!checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.BLACK) || (checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.WHITE)){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("not your turn!\n");
+            return;
+        }
         String start = params[0];
         String end = params[1];
         ChessPosition startPos = parsePosition(start);
         ChessPosition endPos = parsePosition(end);
         String promotion = null;
         ChessPiece.PieceType type = null;
-        if(gameData.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN){
+        if(gameData.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN  && (endPos.getRow() == 1|| endPos.getRow() == 8)){
             Scanner scanner = new Scanner(System.in);
             System.out.print("Promotion Piece for pawn: \n");
             promotion = scanner.nextLine();
@@ -122,6 +127,7 @@ public class GameplayUI implements NotificationHandler {
         }
         ChessMove move = new ChessMove(startPos, endPos, type);
         ws.makeMove(authToken, gameData.gameID(), move);
+        gameData.game().makeMove(move);
         updateGame();
     }
 
@@ -130,7 +136,23 @@ public class GameplayUI implements NotificationHandler {
     }
 
     private void highlight(String[] params){
-        System.out.print("not implemented yet\n");
+        String start = params[0];
+        ChessPosition startPos = parsePosition(start);
+        if(gameData.game().validMoves(startPos) == null){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("no piece in that position\n");
+            return;
+        }
+        if(gameData.game().validMoves(startPos).isEmpty()){
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            System.out.print("this piece has no valid moves dummy\n");
+            return;
+        }
+        if(checkIfBlack){
+            printFunc.printBack(gameData.game(), (ArrayList<ChessMove>) gameData.game().validMoves(startPos));
+        } else {
+            printFunc.print(gameData.game(), (ArrayList<ChessMove>) gameData.game().validMoves(startPos));
+        }
     }
 
     private void updateGame() throws DataFormatException {
@@ -150,7 +172,7 @@ public class GameplayUI implements NotificationHandler {
     }
 
     public void notify(LoadGameMessage notification) throws DataFormatException {
-        printFunc.print(notification.getMessage());
+        printFunc.print(notification.getMessage(), null);
         updateGame();
         System.out.println("\n");
         //printPrompt();
@@ -358,5 +380,19 @@ public class GameplayUI implements NotificationHandler {
             startCol = 8;
         }
         return new ChessPosition(startCol, startRow);
+    }
+
+    private boolean checkPositionValid(String position){
+        if(position.length() != 2){
+            return false;
+        }
+        Character[] letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        Character[] numbers = {'1', '2', '3', '4', '5', '6', '7', '8'};
+        List<Character> lets = Arrays.asList(letters);
+        List<Character> nums = Arrays.asList(numbers);
+        if(!lets.contains(position.charAt(0)) || !nums.contains(position.charAt(1))){
+            return false;
+        }
+        return true;
     }
 }

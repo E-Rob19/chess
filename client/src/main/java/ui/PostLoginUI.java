@@ -1,6 +1,7 @@
 package ui;
 
 //import dataaccess.DataAccessException;
+import chess.InvalidMoveException;
 import facade.ServerFacade;
 import requests.*;
 import model.GameData;
@@ -32,7 +33,7 @@ public class PostLoginUI implements NotificationHandler {
         params = Arrays.copyOfRange(token, 1, token.length);
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, IOException {
+    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws) throws DataFormatException, IOException, InvalidMoveException {
         check = true;
         this.authToken = authToken;
         this.server = server;
@@ -78,7 +79,7 @@ public class PostLoginUI implements NotificationHandler {
         //System.out.print(" - quit\n");
     }
 
-    private void play(String[] params) throws DataFormatException, IOException {
+    private void play(String[] params) throws DataFormatException, IOException, InvalidMoveException {
         if (params.length == 2) {
             int id = 0;
             try {
@@ -183,7 +184,7 @@ public class PostLoginUI implements NotificationHandler {
         }
     }
 
-    private void observe(String[] params) throws DataFormatException, IOException {
+    private void observe(String[] params) throws DataFormatException, IOException, InvalidMoveException {
         if(params.length == 1){
             int id = 0;
             try {

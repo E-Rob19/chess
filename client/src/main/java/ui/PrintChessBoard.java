@@ -52,32 +52,32 @@ public class PrintChessBoard {
                     }
                 }
                 if((i+j)%2==0){
-                    if(high){
-                        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
-                    } else {
+                    if(!high){
                         System.out.print(EscapeSequences.SET_BG_COLOR_RED);
+                    } else {
+                        System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
                     }
                 } else {
-                    if(high){
-                        System.out.print(EscapeSequences.SET_BG_COLOR_GREEN);
-                    } else {
+                    if(!high){
                         System.out.print(EscapeSequences.SET_BG_COLOR_MAGENTA);
+                    } else {
+                        System.out.print(EscapeSequences.SET_BG_COLOR_GREEN);
                     }
                 }
                 piece = board.getPiece(new ChessPosition(i,j));
                 printPiece(piece);
             }
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(" "+i+" ");
             System.out.print(EscapeSequences.SET_BG_COLOR_DARK_GREY);
             System.out.print("\n");
         }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY + EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(EscapeSequences.EMPTY);
-        for (int j = 0; j < 8; j++){
-            System.out.print(" " + letters[j] + " ");
-            if(j%2==1){
+        for (int k = 0; k < 8; k++){
+            System.out.print(" " + letters[k] + " ");
+            if(k%2==1){
                 System.out.print(" ");
             }
         }
@@ -92,14 +92,14 @@ public class PrintChessBoard {
         } else {
             board = game.getBoard();
         }
-        if(highlight == null){
-            this.highlight = new ArrayList<>();
-        } else {
+        if(highlight != null){
             this.highlight.clear();
             this.highlight.add(highlight.getFirst().getStartPosition());
             for (ChessMove chessMove : highlight) {
                 this.highlight.add(chessMove.getEndPosition());
             }
+        } else {
+            this.highlight = new ArrayList<>();
         }
         ChessPiece piece = board.getPiece(new ChessPosition(1,1));
         String[] letters = {"a", "b", "c", "d", "e", "f", "g", "h"};

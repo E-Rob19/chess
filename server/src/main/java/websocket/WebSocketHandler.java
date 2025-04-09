@@ -1,9 +1,6 @@
 package websocket;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
-import chess.InvalidMoveException;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.GameData;
@@ -85,6 +82,7 @@ public class WebSocketHandler {
         }
         ChessMove move = command.getMove();
         ChessGame game = gameDAO.getGame(command.getGameID()).game();
+        ChessPiece piece = game.getBoard().getPiece(move.getStartPosition());
         String whiteUsername = gameDAO.getGame(command.getGameID()).whiteUsername();
         String blackUsername = gameDAO.getGame(command.getGameID()).blackUsername();
         String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
@@ -110,6 +108,13 @@ public class WebSocketHandler {
         boolean whiteCheck = (Objects.equals(username, whiteUsername) && color != ChessGame.TeamColor.WHITE);
         if ( whiteCheck || (Objects.equals(username, blackUsername) && color != ChessGame.TeamColor.BLACK)){
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not your turn");
+            connections.sendBack(command.getAuthToken(), error);
+            return;
+        }
+        //add check that the piece to move is your color
+        whiteCheck = (color == ChessGame.TeamColor.WHITE && piece.getTeamColor() != ChessGame.TeamColor.WHITE);
+        if ( whiteCheck || (color == ChessGame.TeamColor.BLACK && piece.getTeamColor() != ChessGame.TeamColor.BLACK)){
+            ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not your piece");
             connections.sendBack(command.getAuthToken(), error);
             return;
         }
@@ -143,6 +148,34 @@ public class WebSocketHandler {
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             //connections.sendBack(command.getAuthToken(), notification);
             connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            //check if in checkmate
+            if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                gameDAO.getGame(command.getGameID()).game().setGameOver(true);
+                gameOverList.add(command.getGameID());
+                message = String.format("%s is in checkmate!", gameDAO.getGame(command.getGameID()).whiteUsername());
+                notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                connections.sendBack(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            } else if (game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+                gameDAO.getGame(command.getGameID()).game().setGameOver(true);
+                gameOverList.add(command.getGameID());
+                message = String.format("%s is in checkmate!", gameDAO.getGame(command.getGameID()).blackUsername());
+                notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                connections.sendBack(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            }
+            //check if in check
+            if(game.isInCheck(ChessGame.TeamColor.WHITE)){
+                message = String.format("%s is in check!", gameDAO.getGame(command.getGameID()).whiteUsername());
+                notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                connections.sendBack(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+            } else if (game.isInCheck(ChessGame.TeamColor.BLACK)){
+                message = String.format("%s is in check!", gameDAO.getGame(command.getGameID()).blackUsername());
+                notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+                connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
+                connections.sendBack(command.getAuthToken(), notification);
+            }
         } else {
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not a Valid Move");
             connections.sendBack(command.getAuthToken(), error);

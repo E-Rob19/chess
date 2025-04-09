@@ -169,7 +169,14 @@ public class GameplayUI implements NotificationHandler {
             System.out.print("resign doesn't take any inputs\n");
             return;
         }
-        ws.resign(authToken, gameData.gameID());
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
+        System.out.print("are you sure you want to resign? <yes/no>\n");
+        Scanner scanner = new Scanner(System.in);
+        if(scanner.nextLine().equalsIgnoreCase("yes")) {
+            ws.resign(authToken, gameData.gameID());
+        } else {
+            System.out.print("Okay, keep playin! You got this!\n");
+        }
     }
 
     private void highlight(String[] params){

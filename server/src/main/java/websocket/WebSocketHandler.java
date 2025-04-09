@@ -90,8 +90,6 @@ public class WebSocketHandler {
         ChessGame.TeamColor color = game.getTeamTurn();
         boolean canMove = false;
         boolean check = false;
-        //if(game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInCheckmate(ChessGame.TeamColor.BLACK)){
-        //if(game.getGameOver()) {
         if(gameOverList.contains(command.getGameID())){
             check = true;
         }
@@ -111,7 +109,6 @@ public class WebSocketHandler {
             connections.sendBack(command.getAuthToken(), error);
             return;
         }
-        //add check that the piece to move is your color
         whiteCheck = (color == ChessGame.TeamColor.WHITE && piece.getTeamColor() != ChessGame.TeamColor.WHITE);
         if ( whiteCheck || (color == ChessGame.TeamColor.BLACK && piece.getTeamColor() != ChessGame.TeamColor.BLACK)){
             ErrorMessage error = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "Not your piece");
@@ -128,7 +125,6 @@ public class WebSocketHandler {
             game.makeMove(move);
             gameDAO.getGame(command.getGameID()).game().makeMove(move);
             ChessGame.TeamColor nextColor = game.getTeamTurn();
-
             if(color == ChessGame.TeamColor.WHITE) {
                 game.setTeamTurn(ChessGame.TeamColor.BLACK);
                 nextColor = ChessGame.TeamColor.BLACK;
@@ -137,18 +133,13 @@ public class WebSocketHandler {
                 nextColor = ChessGame.TeamColor.WHITE;
             }
             gameDAO.updateGame(command.getGameID(), game, nextColor);
-
-            //String username = authDAO.getAuthFromToken(command.getAuthToken()).username();
-            //game = gameDAO.getGame(command.getGameID()).game();
             LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.sendBack(command.getAuthToken(), action);
             connections.broadcast(command.getAuthToken(), command.getGameID(), action);
             String start = positionConvert(move.getStartPosition());
             var message = String.format("%s moved %s to %s", username, start, positionConvert(move.getEndPosition()));
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
-            //connections.sendBack(command.getAuthToken(), notification);
             connections.broadcast(command.getAuthToken(), command.getGameID(), notification);
-            //check if in checkmate
             if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
                 gameDAO.getGame(command.getGameID()).game().setGameOver(true);
                 gameOverList.add(command.getGameID());

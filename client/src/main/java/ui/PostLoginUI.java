@@ -145,14 +145,6 @@ public class PostLoginUI implements NotificationHandler {
             ws.connect(authToken, id);
             new GameplayUI().eval(authToken, server, username, ws, gameList.get(id-1), colorCheck);
             return;
-//            String [] lis = {};
-//            listGames(lis);
-//            if(color.equalsIgnoreCase("white")){
-//                printFunc.print(null);
-//            } else {
-//                printFunc.printBack(null);
-//            }
-//            return;
         }
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
         System.out.print("unable to join\n");

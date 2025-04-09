@@ -37,7 +37,9 @@ public class GameplayUI implements NotificationHandler {
         command = (token.length > 0) ? token[0] : "help";
     }
 
-    public void eval(String authToken, ServerFacade server, String username, WebSocketFacade ws, GameData gameData, boolean checkIfBlack) throws DataFormatException, IOException, InvalidMoveException {
+    public void eval(String authToken, ServerFacade server,
+                     String username, WebSocketFacade ws, GameData gameData,
+                     boolean checkIfBlack) throws DataFormatException, IOException, InvalidMoveException {
         this.username = username;
         this.ws = ws;
         this.authToken = authToken;
@@ -117,7 +119,8 @@ public class GameplayUI implements NotificationHandler {
             System.out.print("move only takes two inputs\n");
             return;
         }
-        if((!checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.BLACK) || (checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.WHITE)){
+        if((!checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.BLACK) ||
+                (checkIfBlack && gameData.game().getTeamTurn() == ChessGame.TeamColor.WHITE)){
             System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             System.out.print("not your turn!\n");
             return;
@@ -139,7 +142,8 @@ public class GameplayUI implements NotificationHandler {
         }
         String promotion = null;
         ChessPiece.PieceType type = null;
-        if(gameData.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN  && (endPos.getRow() == 1|| endPos.getRow() == 8)){
+        if(gameData.game().getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN
+                && (endPos.getRow() == 1|| endPos.getRow() == 8)){
             Scanner scanner = new Scanner(System.in);
             System.out.print("Promotion Piece for pawn: \n");
             promotion = scanner.nextLine();
@@ -242,200 +246,71 @@ public class GameplayUI implements NotificationHandler {
     }
 
     private ChessPosition parsePosition(String start) {
-        int startRow = 0;
-        int startCol = 0;
-        if(start.equalsIgnoreCase("a1")) {
-            startRow = 1;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("a2")) {
-            startCol = 2;
-            startRow = 1;
-        }  else if (start.equalsIgnoreCase("a3")) {
-            startCol = 3;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("a4")) {
-            startCol = 4;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("a5")) {
-            startCol = 5;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("a6")) {
-            startCol = 6;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("a7")) {
-            startCol = 7;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("a8")) {
-            startCol = 8;
-            startRow = 1;
-        } else if (start.equalsIgnoreCase("b1")) {
-            startRow = 2;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("b2")) {
-            startRow = 2;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("b3")) {
-            startRow = 2;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("b4")) {
-            startRow = 2;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("b5")) {
-            startRow = 2;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("b6")) {
-            startRow = 2;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("b7")) {
-            startRow = 2;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("b8")) {
-            startRow = 2;
-            startCol = 8;
-        }  else if (start.equalsIgnoreCase("c1")) {
-            startRow = 3;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("c2")) {
-            startRow = 3;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("c3")) {
-            startRow = 3;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("c4")) {
-            startRow = 3;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("c5")) {
-            startRow = 3;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("c6")) {
-            startRow = 3;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("c7")) {
-            startRow = 3;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("c8")) {
-            startRow = 3;
-            startCol = 8;
-        }  else if (start.equalsIgnoreCase("d1")) {
-            startRow = 4;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("d2")) {
-            startRow = 4;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("d3")) {
-            startRow = 4;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("d4")) {
-            startRow = 4;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("d5")) {
-            startRow = 4;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("d6")) {
-            startRow = 4;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("d7")) {
-            startRow = 4;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("d8")) {
-            startRow = 4;
-            startCol = 8;
-        }  else if (start.equalsIgnoreCase("e1")) {
-            startRow = 5;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("e2")) {
-            startRow = 5;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("e3")) {
-            startRow = 5;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("e4")) {
-            startRow = 5;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("e5")) {
-            startRow = 5;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("e6")) {
-            startRow = 5;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("e7")) {
-            startRow = 5;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("e8")) {
-            startRow = 5;
-            startCol = 8;
-        } else if (start.equalsIgnoreCase("f1")) {
-            startRow = 6;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("f2")) {
-            startRow = 6;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("f3")) {
-            startRow = 6;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("f4")) {
-            startRow = 6;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("f5")) {
-            startRow = 6;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("f6")) {
-            startRow = 6;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("f7")) {
-            startRow = 6;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("f8")) {
-            startRow = 6;
-            startCol = 8;
-        } else if (start.equalsIgnoreCase("g1")) {
-            startRow = 7;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("g2")) {
-            startRow = 7;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("g3")) {
-            startRow = 7;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("g4")) {
-            startRow = 7;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("g5")) {
-            startRow = 7;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("g6")) {
-            startRow = 7;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("g7")) {
-            startRow = 7;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("g8")) {
-            startRow = 7;
-            startCol = 8;
-        } else if (start.equalsIgnoreCase("h1")) {
-            startRow = 8;
-            startCol = 1;
-        } else if (start.equalsIgnoreCase("h2")) {
-            startRow = 8;
-            startCol = 2;
-        } else if (start.equalsIgnoreCase("h3")) {
-            startRow = 8;
-            startCol = 3;
-        } else if (start.equalsIgnoreCase("h4")) {
-            startRow = 8;
-            startCol = 4;
-        } else if (start.equalsIgnoreCase("h5")) {
-            startRow = 8;
-            startCol = 5;
-        } else if (start.equalsIgnoreCase("h6")) {
-            startRow = 8;
-            startCol = 6;
-        } else if (start.equalsIgnoreCase("h7")) {
-            startRow = 8;
-            startCol = 7;
-        } else if (start.equalsIgnoreCase("h8")) {
-            startRow = 8;
-            startCol = 8;
+        int startRow = 0; int startCol = 0;
+        if(start.equalsIgnoreCase("a1")) { startRow = 1;startCol = 1;}
+        else if (start.equalsIgnoreCase("a2")) { startCol = 2; startRow = 1;}
+        else if (start.equalsIgnoreCase("a3")) { startCol = 3; startRow = 1;}
+        else if (start.equalsIgnoreCase("a4")) { startCol = 4; startRow = 1;}
+        else if (start.equalsIgnoreCase("a5")) { startCol = 5; startRow = 1;}
+        else if (start.equalsIgnoreCase("a6")) { startCol = 6; startRow = 1;}
+        else if (start.equalsIgnoreCase("a7")) { startCol = 7; startRow = 1;}
+        else if (start.equalsIgnoreCase("a8")) {startCol = 8; startRow = 1;}
+        else if (start.equalsIgnoreCase("b1")) { startRow = 2; startCol = 1; }
+        else if (start.equalsIgnoreCase("b2")) { startRow = 2; startCol = 2;}
+        else if (start.equalsIgnoreCase("b3")) { startRow = 2; startCol = 3;}
+        else if (start.equalsIgnoreCase("b4")) { startRow = 2; startCol = 4;
+        } else if (start.equalsIgnoreCase("b5")) { startRow = 2; startCol = 5;
+        } else if (start.equalsIgnoreCase("b6")) { startRow = 2; startCol = 6;
+        } else if (start.equalsIgnoreCase("b7")) { startRow = 2; startCol = 7;
+        } else if (start.equalsIgnoreCase("b8")) { startRow = 2; startCol = 8;
+        } else if (start.equalsIgnoreCase("c1")) { startRow = 3; startCol = 1;
+        } else if (start.equalsIgnoreCase("c2")) { startRow = 3; startCol = 2;
+        } else if (start.equalsIgnoreCase("c3")) { startRow = 3; startCol = 3;
+        } else if (start.equalsIgnoreCase("c4")) { startRow = 3;startCol = 4;
+        } else if (start.equalsIgnoreCase("c5")) {startRow = 3;startCol = 5;
+        } else if (start.equalsIgnoreCase("c6")) {startRow = 3;startCol = 6;
+        } else if (start.equalsIgnoreCase("c7")) {startRow = 3;startCol = 7;
+        } else if (start.equalsIgnoreCase("c8")) {startRow = 3;startCol = 8;
+        } else if (start.equalsIgnoreCase("d1")) {startRow = 4;startCol = 1;
+        } else if (start.equalsIgnoreCase("d2")) {startRow = 4;startCol = 2;
+        } else if (start.equalsIgnoreCase("d3")) {startRow = 4;startCol = 3;
+        } else if (start.equalsIgnoreCase("d4")) {startRow = 4;startCol = 4;
+        } else if (start.equalsIgnoreCase("d5")) {startRow = 4;startCol = 5;
+        } else if (start.equalsIgnoreCase("d6")) {startRow = 4;startCol = 6;
+        } else if (start.equalsIgnoreCase("d7")) {startRow = 4;startCol = 7;
+        } else if (start.equalsIgnoreCase("d8")) {startRow = 4;startCol = 8;
+        }  else if (start.equalsIgnoreCase("e1")) {startRow = 5;startCol = 1;
+        } else if (start.equalsIgnoreCase("e2")) {startRow = 5;startCol = 2;
+        } else if (start.equalsIgnoreCase("e3")) {startRow = 5;startCol = 3;
+        } else if (start.equalsIgnoreCase("e4")) {startRow = 5;startCol = 4;
+        } else if (start.equalsIgnoreCase("e5")) {startRow = 5;startCol = 5;
+        } else if (start.equalsIgnoreCase("e6")) {startRow = 5;startCol = 6;
+        } else if (start.equalsIgnoreCase("e7")) {startRow = 5;startCol = 7;
+        } else if (start.equalsIgnoreCase("e8")) {startRow = 5;startCol = 8;
+        } else if (start.equalsIgnoreCase("f1")) {startRow = 6;startCol = 1;
+        } else if (start.equalsIgnoreCase("f2")) {startRow = 6;startCol = 2;
+        } else if (start.equalsIgnoreCase("f3")) {startRow = 6;startCol = 3;
+        } else if (start.equalsIgnoreCase("f4")) {startRow = 6;startCol = 4;
+        } else if (start.equalsIgnoreCase("f5")) {startRow = 6;startCol = 5;
+        } else if (start.equalsIgnoreCase("f6")) {startRow = 6;startCol = 6;
+        } else if (start.equalsIgnoreCase("f7")) {startRow = 6;startCol = 7;
+        } else if (start.equalsIgnoreCase("f8")) {startRow = 6;startCol = 8;
+        } else if (start.equalsIgnoreCase("g1")) {startRow = 7;startCol = 1;
+        } else if (start.equalsIgnoreCase("g2")) {startRow = 7;startCol = 2;
+        } else if (start.equalsIgnoreCase("g3")) {startRow = 7;startCol = 3;
+        } else if (start.equalsIgnoreCase("g4")) {startRow = 7;startCol = 4;
+        } else if (start.equalsIgnoreCase("g5")) {startRow = 7;startCol = 5;
+        } else if (start.equalsIgnoreCase("g6")) {startRow = 7;startCol = 6;
+        } else if (start.equalsIgnoreCase("g7")) {startRow = 7;startCol = 7;
+        } else if (start.equalsIgnoreCase("g8")) {startRow = 7;startCol = 8;
+        } else if (start.equalsIgnoreCase("h1")) {startRow = 8;startCol = 1;
+        } else if (start.equalsIgnoreCase("h2")) {startRow = 8;startCol = 2;
+        } else if (start.equalsIgnoreCase("h3")) {startRow = 8;startCol = 3;
+        } else if (start.equalsIgnoreCase("h4")) {startRow = 8;startCol = 4;
+        } else if (start.equalsIgnoreCase("h5")) {startRow = 8;startCol = 5;
+        } else if (start.equalsIgnoreCase("h6")) {startRow = 8;startCol = 6;
+        } else if (start.equalsIgnoreCase("h7")) {startRow = 8;startCol = 7;
+        } else if (start.equalsIgnoreCase("h8")) {startRow = 8;startCol = 8;
         }
         return new ChessPosition(startCol, startRow);
     }

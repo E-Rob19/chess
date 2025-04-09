@@ -138,8 +138,8 @@ public class WebSocketHandler {
             LoadGameMessage action = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.sendBack(command.getAuthToken(), action);
             connections.broadcast(command.getAuthToken(), command.getGameID(), action);
-
-            var message = String.format("%s moved %s to %s", username, positionConvert(move.getStartPosition()), positionConvert(move.getEndPosition()));
+            String start = positionConvert(move.getStartPosition());
+            var message = String.format("%s moved %s to %s", username, start, positionConvert(move.getEndPosition()));
             var notification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
             //connections.sendBack(command.getAuthToken(), notification);
             connections.broadcast(command.getAuthToken(), command.getGameID(), notification);

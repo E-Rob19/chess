@@ -26,13 +26,6 @@ public class PreLoginUI implements NotificationHandler{
     private static String command;
     private static String[] params;
     public static ServerFacade server = new ServerFacade("http://localhost:8080");
-//    private final NotificationHandler notificationHandler;
-//    private WebSocketFacade ws;
-
-//    public PreLoginUI() throws IOException {
-//        this.notificationHandler = this;
-//        ws = new WebSocketFacade("http://localhost:8080", this);
-//    }
 
 
     public static void parseInput(String input){
@@ -148,23 +141,11 @@ public class PreLoginUI implements NotificationHandler{
             PrintChessBoard printer = new PrintChessBoard();
             printer.print(game, null);
             return;
-            //updateGame();
         }
         var tokens = message.toLowerCase().split("\"");
         System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
         System.out.println(tokens[3]);
         System.out.print(EscapeSequences.RESET_TEXT_COLOR);
         System.out.println("\n[IN-GAME] >>> ");
-        //System.out.println("testing notify\n");
-        //printPrompt();
-        //GameplayUI ui = new GameplayUI();
-        //ui.notify(notification);
-//        if(notification.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION){
-//            notifyMessage((NotificationMessage) notification);
-//        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
-//            notifyError((ErrorMessage) notification);
-//        } else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
-//            notifyGame((LoadGameMessage) notification);
-//        }
     }
 }
